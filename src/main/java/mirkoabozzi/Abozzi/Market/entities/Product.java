@@ -38,7 +38,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "discount_id"))
     private List<Discount> discountList;
 
-    public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, Category category, List<Discount> discountList) {
+    public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -47,6 +47,6 @@ public class Product {
         this.lastUpdate = lastUpdate;
         this.imgUrl = imgUrl;
         this.category = category;
-        this.discountList = discountList;
+
     }
 }
