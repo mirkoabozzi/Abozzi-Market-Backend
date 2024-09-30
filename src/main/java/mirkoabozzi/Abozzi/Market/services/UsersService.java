@@ -1,15 +1,23 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -43,5 +51,30 @@ public class UsersService {
                 payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         User userSaved = this.usersRepository.save(newUser);
         return userSaved;
+    }
+
+    //GET ALL
+    public Page<User> findAll(int page, int size, String sortBy) {
+        if (page > 50) page = 50;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.usersRepository.findAll(pageable);
+    }
+
+    //PUT UPDATE PROFILE
+    public User updateUser(UUID id, UsersDTO payload) {
+        User userFound = this.findById(id);
+        userFound.setName(payload.name());
+        userFound.setSurname(payload.surname());
+        userFound.setEmail(payload.email());
+        userFound.setPhoneNumber(payload.phoneNumber());
+        return this.usersRepository.save(userFound);
+    }
+
+    //IMG UPLOAD
+    public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
+        User userFound = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        userFound.setAvatar(url);
+        this.usersRepository.save(userFound);
     }
 }
