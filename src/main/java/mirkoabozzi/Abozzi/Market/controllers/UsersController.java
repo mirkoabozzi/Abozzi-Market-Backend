@@ -36,13 +36,13 @@ public class UsersController {
 
     //PUT ME
     @PutMapping("/me")
-    public User updateProfile(@AuthenticationPrincipal User userAuthenticated, @RequestBody UsersDTO payload) {
+    public User updateMyProfile(@AuthenticationPrincipal User userAuthenticated, @RequestBody UsersDTO payload) {
         return this.usersService.updateUser(userAuthenticated.getId(), payload);
     }
 
     //POST ME IMG
     @PostMapping("/me/avatar")
-    public void imgUploadMe(@RequestParam("avatar") MultipartFile img, @AuthenticationPrincipal User userAuthenticated) throws IOException, MaxUploadSizeExceededException {
+    public void imgUpload(@RequestParam("avatar") MultipartFile img, @AuthenticationPrincipal User userAuthenticated) throws IOException, MaxUploadSizeExceededException {
         this.usersService.imgUpload(img, userAuthenticated.getId());
     }
 }
