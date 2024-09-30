@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"password", "authorities", "enabled", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "username"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -33,8 +35,9 @@ public class User implements UserDetails {
     private LocalDate registrationDate;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String avatar;
 
-    public User(String name, String surname, String email, String password, String phoneNumber) {
+    public User(String name, String surname, String email, String password, String phoneNumber, String avatar) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -42,6 +45,7 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.registrationDate = LocalDate.now();
         this.role = Role.USER;
+        this.avatar = avatar;
     }
 
     @Override

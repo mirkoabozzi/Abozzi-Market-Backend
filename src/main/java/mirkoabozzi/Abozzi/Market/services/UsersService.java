@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
+import com.cloudinary.Cloudinary;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -17,6 +18,8 @@ public class UsersService {
     private UsersRepository usersRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private Cloudinary cloudinary;
 
     //FIND BY EMAIL
     public User findByEmail(String email) {
@@ -32,7 +35,12 @@ public class UsersService {
     public User saveUser(UsersDTO payload) {
         if (this.usersRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " already on DB");
-        User newUser = new User(payload.name(), payload.surname(), payload.email(), this.passwordEncoder.encode(payload.password()), payload.phoneNumber());
+        User newUser = new User(
+                payload.name(),
+                payload.surname(),
+                payload.email(),
+                this.passwordEncoder.encode(payload.password()),
+                payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         User userSaved = this.usersRepository.save(newUser);
         return userSaved;
     }
