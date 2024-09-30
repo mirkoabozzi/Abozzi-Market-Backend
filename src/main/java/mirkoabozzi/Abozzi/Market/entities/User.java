@@ -1,9 +1,6 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +31,7 @@ public class User implements UserDetails {
     private String password;
     private String phoneNumber;
     private LocalDate registrationDate;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public User(String name, String surname, String email, String password, String phoneNumber) {

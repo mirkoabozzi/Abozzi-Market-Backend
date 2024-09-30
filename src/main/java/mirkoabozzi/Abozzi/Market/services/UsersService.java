@@ -6,6 +6,7 @@ import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //FIND BY EMAIL
     public User findByEmail(String email) {
@@ -29,7 +32,7 @@ public class UsersService {
     public User saveUser(UsersDTO payload) {
         if (this.usersRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " already on DB");
-        User newUser = new User(payload.name(), payload.surname(), payload.email(), payload.password(), payload.phoneNumber());
+        User newUser = new User(payload.name(), payload.surname(), payload.email(), this.passwordEncoder.encode(payload.password()), payload.phoneNumber());
         User userSaved = this.usersRepository.save(newUser);
         return userSaved;
     }

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class Order {
     @Setter(AccessLevel.NONE)
     private UUID id;
     private LocalDate orderDate;
+    private OrdersState ordersState;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -33,16 +35,12 @@ public class Order {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
-    @ManyToOne
-    @JoinColumn(name = "orders_state_id")
-    private OrderState orderState;
-
-    public Order(User user, Payment payment, Shipment shipment, OrderState orderState) {
-        this.orderDate = LocalDate.now();
+    public Order(LocalDate orderDate, User user, Payment payment, Shipment shipment) {
+        this.orderDate = orderDate;
+        this.ordersState = OrdersState.PROCESSING;
         this.user = user;
         this.payment = payment;
         this.shipment = shipment;
-        this.orderState = orderState;
     }
 }
 
