@@ -42,7 +42,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        return new ErrorsDTO("You can't delete an element that is linked to another element! ", LocalDateTime.now());
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
     }
 
     @ExceptionHandler(UnauthorizedException.class)

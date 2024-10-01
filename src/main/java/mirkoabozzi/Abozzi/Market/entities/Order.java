@@ -8,6 +8,8 @@ import lombok.Setter;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,12 +38,17 @@ public class Order {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderDetail> orderDetailList;
+
+
     public Order(LocalDate orderDate, OrdersState ordersState, User user, Payment payment, Shipment shipment) {
         this.orderDate = orderDate;
         this.ordersState = ordersState;
         this.user = user;
         this.payment = payment;
         this.shipment = shipment;
+        this.orderDetailList = new ArrayList<>();
     }
 }
 
