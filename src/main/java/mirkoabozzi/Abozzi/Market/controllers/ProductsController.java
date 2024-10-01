@@ -72,4 +72,24 @@ public class ProductsController {
     public void imgUpload(@RequestParam("image") MultipartFile img, @PathVariable UUID id) throws IOException, MaxUploadSizeExceededException {
         this.productsService.imgUpload(img, id);
     }
+
+    //GET FIND BY PRODUCTS NAME
+    @GetMapping("/name")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Page<Product> findByProductsContainsName(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                                    @RequestParam String name) {
+        return this.productsService.findByProductsContainsName(page, size, sortBy, name);
+    }
+
+    //GET PRODUCTS BY CATEGORY NAME
+    @GetMapping("/category")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Page<Product> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "name") String sortBy,
+                                                    @RequestParam String name) {
+        return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
+    }
 }

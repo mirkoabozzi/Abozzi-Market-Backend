@@ -65,6 +65,7 @@ public class ProductsService {
         productFound.setPrice(payload.price());
         productFound.setQuantityAvailable(payload.quantityAvailable());
         productFound.setCategory(categoryFound);
+        productFound.setLastUpdate(LocalDate.now());
         return this.productsRepository.save(productFound);
     }
 
@@ -79,5 +80,17 @@ public class ProductsService {
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         productFound.setImgUrl(url);
         this.productsRepository.save(productFound);
+    }
+
+    //FIND BY PRODUCT CONTAINS NAME
+    public Page<Product> findByProductsContainsName(int pages, int size, String sortBy, String name) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        return this.productsRepository.findByNameContainingIgnoreCase(pageable, name);
+    }
+
+    //FIND PRODUCT BY CATEGORY
+    public Page<Product> findProductsByCategoryContainingName(int pages, int size, String sortBy, String name) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        return this.productsRepository.findProductsByCategoryNameContaining(pageable, name);
     }
 }

@@ -26,9 +26,9 @@ public class CategoriesService {
 
     //POST SAVE
     public Category saveCategory(CategoriesDTO payload) {
-        if (categoriesRepository.existsByName(payload.name().toUpperCase()))
+        if (categoriesRepository.existsByNameIgnoreCase(payload.name()))
             throw new BadRequestException("Category " + payload.name() + " already on DB");
-        Category newCategory = new Category(payload.name().toUpperCase());
+        Category newCategory = new Category(payload.name());
         return this.categoriesRepository.save(newCategory);
     }
 
@@ -42,7 +42,7 @@ public class CategoriesService {
     //PUT UPDATE
     public Category updateCategory(UUID id, CategoriesDTO payload) {
         Category categoryFound = this.findById(id);
-        if (categoriesRepository.existsByName(payload.name().toUpperCase()))
+        if (categoriesRepository.existsByNameIgnoreCase(payload.name()))
             throw new BadRequestException("Category " + payload.name() + " already on DB");
         categoryFound.setName(payload.name());
         return this.categoriesRepository.save(categoryFound);

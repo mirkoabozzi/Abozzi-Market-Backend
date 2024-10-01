@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface CategoriesRepository extends JpaRepository<Category, UUID> {
-    boolean existsByName(String name);
+    boolean existsByNameIgnoreCase(String name);
 }
