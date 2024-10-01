@@ -59,7 +59,7 @@ public class DiscountsController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteCategory(@PathVariable UUID id) {
+    public void deleteDiscount(@PathVariable UUID id) {
         this.discountsService.deleteDiscount(id);
     }
 }

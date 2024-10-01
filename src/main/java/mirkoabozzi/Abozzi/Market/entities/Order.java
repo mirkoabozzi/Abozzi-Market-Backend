@@ -21,6 +21,7 @@ public class Order {
     @Setter(AccessLevel.NONE)
     private UUID id;
     private LocalDate orderDate;
+    @Enumerated(EnumType.STRING)
     private OrdersState ordersState;
 
     @ManyToOne
@@ -35,9 +36,9 @@ public class Order {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
-    public Order(LocalDate orderDate, User user, Payment payment, Shipment shipment) {
+    public Order(LocalDate orderDate, OrdersState ordersState, User user, Payment payment, Shipment shipment) {
         this.orderDate = orderDate;
-        this.ordersState = OrdersState.PROCESSING;
+        this.ordersState = ordersState;
         this.user = user;
         this.payment = payment;
         this.shipment = shipment;
