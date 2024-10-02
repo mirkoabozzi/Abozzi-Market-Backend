@@ -4,7 +4,6 @@ import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
-import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.repositories.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,6 +69,6 @@ public class OrdersService {
 
     //DELETE MY ORDER
     public void deleteMyOrder(UUID id, UUID userId) {
-        this.ordersRepository.delete(this.ordersRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new UnauthorizedException("You don't have permission to delete this order!")));
+        this.ordersRepository.delete(this.ordersRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Order whit ID " + id + " not found")));
     }
 }
