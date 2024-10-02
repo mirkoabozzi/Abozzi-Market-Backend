@@ -25,7 +25,7 @@ public class ReviewsController {
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Review addToWishlist(@RequestBody @Validated ReviewsDTO payload, @AuthenticationPrincipal User userAuthenticated, BindingResult validation) {
+    public Review addReview(@RequestBody @Validated ReviewsDTO payload, @AuthenticationPrincipal User userAuthenticated, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);

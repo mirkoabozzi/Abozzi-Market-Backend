@@ -28,6 +28,7 @@ public class Product {
     private LocalDate createdAt;
     private LocalDate lastUpdate;
     private String imgUrl;
+    private boolean discountStatus;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -39,7 +40,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "discount_id"))
     private List<Discount> discountList;
 
-    public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, Category category) {
+    public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, boolean discountStatus, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -47,7 +48,8 @@ public class Product {
         this.createdAt = LocalDate.now();
         this.lastUpdate = lastUpdate;
         this.imgUrl = imgUrl;
+        this.discountStatus = discountStatus;
         this.category = category;
-        this.discountList= new ArrayList<>();
+        this.discountList = new ArrayList<>();
     }
 }

@@ -19,7 +19,7 @@ public class Review {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
-    private Double rating;
+    private int rating;
     private String comment;
     private LocalDate publishDate;
     private LocalDate updatedAt;
@@ -32,7 +32,7 @@ public class Review {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Review(Double rating, String comment, LocalDate publishDate, LocalDate updatedAt, User user, Product product) {
+    public Review(int rating, String comment, LocalDate publishDate, LocalDate updatedAt, User user, Product product) {
         this.rating = rating;
         this.comment = comment;
         this.publishDate = publishDate;

@@ -46,6 +46,7 @@ public class ProductsService {
                 payload.quantityAvailable(),
                 LocalDate.now(),
                 "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.description(),
+                false,
                 categoryFound);
         return this.productsRepository.save(newProduct);
     }
@@ -104,6 +105,7 @@ public class ProductsService {
         Discount discountFound = this.discountsService.findById(UUID.fromString(payload.discount()));
         if (!productFound.getDiscountList().contains(discountFound)) {
             productFound.getDiscountList().add(discountFound);
+            productFound.setDiscountStatus(true);
         } else {
             throw new BadRequestException("This product already have this discount!");
         }
@@ -116,6 +118,8 @@ public class ProductsService {
         Discount discountFound = this.discountsService.findById(UUID.fromString(payload.discount()));
         if (productFound.getDiscountList().contains(discountFound)) {
             productFound.getDiscountList().remove(discountFound);
+            if (productFound.getDiscountList().isEmpty())
+                productFound.setDiscountStatus(false);
         } else {
             throw new BadRequestException("This product don't have this discount!");
         }
