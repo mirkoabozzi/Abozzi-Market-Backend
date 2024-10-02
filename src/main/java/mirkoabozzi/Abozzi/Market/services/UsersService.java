@@ -63,6 +63,8 @@ public class UsersService {
     //PUT UPDATE PROFILE
     public User updateUser(UUID id, UsersDTO payload) {
         User userFound = this.findById(id);
+        if (!userFound.getEmail().equals(payload.email()) && this.usersRepository.existsByEmail(payload.email()))
+            throw new BadRequestException("Email " + payload.email() + " already on DB");
         userFound.setName(payload.name());
         userFound.setSurname(payload.surname());
         userFound.setEmail(payload.email());

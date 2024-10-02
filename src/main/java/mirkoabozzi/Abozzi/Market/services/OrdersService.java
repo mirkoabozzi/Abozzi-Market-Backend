@@ -3,6 +3,7 @@ package mirkoabozzi.Abozzi.Market.services;
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
+import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,16 @@ public class OrdersService {
         Payment paymentFound = this.paymentsService.findById(UUID.fromString(payload.payment()));
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
         Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
-        Order newOrder = new Order(LocalDate.now(), OrdersState.PROCESSING, userFound, paymentFound, shipmentFound);
-        Order savedOrder = this.ordersRepository.save(newOrder);
+        Order newOrder = new Order(LocalDate.now(), OrdersState.PROCESSING, userFound, null, shipmentFound);
         List<OrderDetail> orderDetails = payload.orderDetails().stream().map(detailDTO -> {
             Product product = this.productsService.findById(UUID.fromString(detailDTO.product()));
-            return new OrderDetail(detailDTO.quantity(), savedOrder, product);
+            if (product.getQuantityAvailable() < detailDTO.quantity())
+                throw new BadRequestException("Not enough stock for product " + product.getId());
+            product.setQuantityAvailable(product.getQuantityAvailable() - detailDTO.quantity());
+            return new OrderDetail(detailDTO.quantity(), newOrder, product);
         }).toList();
+        newOrder.setPayment(paymentFound);
+        Order savedOrder = this.ordersRepository.save(newOrder);
         this.orderDetailsService.saveAllOrderDetails(orderDetails);
         return savedOrder;
     }
