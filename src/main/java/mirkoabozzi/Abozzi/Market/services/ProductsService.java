@@ -2,8 +2,10 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import mirkoabozzi.Abozzi.Market.dto.ProductDiscountDTO;
 import mirkoabozzi.Abozzi.Market.dto.ProductsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
+import mirkoabozzi.Abozzi.Market.entities.Discount;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,6 +32,8 @@ public class ProductsService {
     private CategoriesService categoriesService;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private DiscountsService discountsService;
 
     //POST SAVE
     public Product saveProduct(ProductsDTO payload) {
@@ -92,5 +97,17 @@ public class ProductsService {
     public Page<Product> findProductsByCategoryContainingName(int pages, int size, String sortBy, String name) {
         Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
         return this.productsRepository.findProductsByCategoryNameContaining(pageable, name);
+    }
+
+    //ADD DISCOUNT TO PRODUCT
+    public Product addDiscount(UUID productId, ProductDiscountDTO payload){
+        Product productFound= this.findById(productId);
+        Discount discountFound= this.discountsService.findById(UUID.fromString(payload.discount()));
+        if (!productFound.getDiscountList().contains(discountFound)) {
+            productFound.getDiscountList().add(discountFound);
+        }else{
+            throw new BadRequestException("This product already have this discount!");
+        }
+        return this.productsRepository.save(productFound);
     }
 }

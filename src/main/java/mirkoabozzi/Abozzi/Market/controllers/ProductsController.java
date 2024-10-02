@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import mirkoabozzi.Abozzi.Market.dto.ProductDiscountDTO;
 import mirkoabozzi.Abozzi.Market.dto.ProductsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -91,5 +92,17 @@ public class ProductsController {
                                                     @RequestParam(defaultValue = "name") String sortBy,
                                                     @RequestParam String name) {
         return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
+    }
+
+    //UPDATE ADD DISCOUNT
+    @PutMapping("/discount/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Product addDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return this.productsService.addDiscount(id, payload);
+        }
     }
 }

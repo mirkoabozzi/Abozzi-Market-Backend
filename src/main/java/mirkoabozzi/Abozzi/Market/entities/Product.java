@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +48,6 @@ public class Product {
         this.lastUpdate = lastUpdate;
         this.imgUrl = imgUrl;
         this.category = category;
-
+        this.discountList= new ArrayList<>();
     }
 }
