@@ -6,6 +6,7 @@ import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.OrdersRepository;
+import mirkoabozzi.Abozzi.Market.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,8 @@ public class OrdersService {
     private ShipmentsService shipmentsService;
     @Autowired
     private OrderDetailsService orderDetailsService;
+    @Autowired
+    private MailgunSender mailgunSender;
 
     //POST SAVE ORDER
     public Order saveOrder(OrdersDTO payload) {
@@ -48,6 +51,7 @@ public class OrdersService {
         newOrder.setPayment(paymentFound);
         Order savedOrder = this.ordersRepository.save(newOrder);
         this.orderDetailsService.saveAllOrderDetails(orderDetails);
+//        this.mailgunSender.sendOrderCreatedEmail(userFound);
         return savedOrder;
     }
 

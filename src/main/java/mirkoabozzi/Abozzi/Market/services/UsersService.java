@@ -7,6 +7,7 @@ import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
+import mirkoabozzi.Abozzi.Market.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,8 @@ public class UsersService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private MailgunSender mailgunSender;
 
     //FIND BY EMAIL
     public User findByEmail(String email) {
@@ -50,6 +53,7 @@ public class UsersService {
                 this.passwordEncoder.encode(payload.password()),
                 payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         User userSaved = this.usersRepository.save(newUser);
+//        this.mailgunSender.sendRegistrationEmail(newUser);
         return userSaved;
     }
 
