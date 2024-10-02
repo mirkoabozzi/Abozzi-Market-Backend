@@ -105,4 +105,16 @@ public class ProductsController {
             return this.productsService.addDiscount(id, payload);
         }
     }
+
+    //REMOVE DISCOUNT
+    @DeleteMapping("/discount/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Product removeDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return this.productsService.removeDiscount(id, payload);
+        }
+    }
 }

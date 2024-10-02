@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -100,13 +99,25 @@ public class ProductsService {
     }
 
     //ADD DISCOUNT TO PRODUCT
-    public Product addDiscount(UUID productId, ProductDiscountDTO payload){
-        Product productFound= this.findById(productId);
-        Discount discountFound= this.discountsService.findById(UUID.fromString(payload.discount()));
+    public Product addDiscount(UUID productId, ProductDiscountDTO payload) {
+        Product productFound = this.findById(productId);
+        Discount discountFound = this.discountsService.findById(UUID.fromString(payload.discount()));
         if (!productFound.getDiscountList().contains(discountFound)) {
             productFound.getDiscountList().add(discountFound);
-        }else{
+        } else {
             throw new BadRequestException("This product already have this discount!");
+        }
+        return this.productsRepository.save(productFound);
+    }
+
+    //REMOVE DISCOUNT
+    public Product removeDiscount(UUID productId, ProductDiscountDTO payload) {
+        Product productFound = this.findById(productId);
+        Discount discountFound = this.discountsService.findById(UUID.fromString(payload.discount()));
+        if (productFound.getDiscountList().contains(discountFound)) {
+            productFound.getDiscountList().remove(discountFound);
+        } else {
+            throw new BadRequestException("This product don't have this discount!");
         }
         return this.productsRepository.save(productFound);
     }
