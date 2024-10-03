@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.exceptions;
 
+import com.paypal.base.rest.PayPalRESTException;
 import mirkoabozzi.Abozzi.Market.dto.ErrorsDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -55,5 +56,11 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorsDTO handleForbiddenException(AuthorizationDeniedException ex) {
         return new ErrorsDTO("You don't have permission access", LocalDateTime.now());
+    }
+    
+    @ExceptionHandler(PayPalRESTException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handlePayPalRESTException(PayPalRESTException ex) {
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
     }
 }
