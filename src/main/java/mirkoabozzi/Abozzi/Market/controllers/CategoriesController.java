@@ -11,7 +11,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,6 +56,13 @@ public class CategoriesController {
         } else {
             return this.categoriesService.updateCategory(id, payload);
         }
+    }
+
+    //IMG UPDATE
+    @PostMapping("/image/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void imgUpload(@RequestParam("image") MultipartFile img, @PathVariable UUID id) throws IOException, MaxUploadSizeExceededException {
+        this.categoriesService.imgUpload(img, id);
     }
 
     //DELETE

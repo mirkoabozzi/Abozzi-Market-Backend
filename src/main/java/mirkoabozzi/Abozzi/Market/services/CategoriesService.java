@@ -1,5 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.Abozzi.Market.dto.CategoriesDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -11,13 +13,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class CategoriesService {
     @Autowired
     private CategoriesRepository categoriesRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
     //FIND BY ID
     public Category findById(UUID id) {
@@ -28,7 +35,7 @@ public class CategoriesService {
     public Category saveCategory(CategoriesDTO payload) {
         if (categoriesRepository.existsByNameIgnoreCase(payload.name()))
             throw new BadRequestException("Category " + payload.name() + " already on DB");
-        Category newCategory = new Category(payload.name());
+        Category newCategory = new Category(payload.name(), "https://ui-avatars.com/api/?name=" + payload.name());
         return this.categoriesRepository.save(newCategory);
     }
 
@@ -46,6 +53,14 @@ public class CategoriesService {
             throw new BadRequestException("Category " + payload.name() + " already on DB");
         categoryFound.setName(payload.name());
         return this.categoriesRepository.save(categoryFound);
+    }
+
+    //IMG UPLOAD
+    public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
+        Category categoryFound = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        categoryFound.setImage(url);
+        this.categoriesRepository.save(categoryFound);
     }
 
     //DELETE

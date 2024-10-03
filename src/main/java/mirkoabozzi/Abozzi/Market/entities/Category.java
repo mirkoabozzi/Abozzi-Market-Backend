@@ -22,8 +22,10 @@ public class Category {
     @Setter(AccessLevel.NONE)
     private UUID id;
     private String name;
+    private String image;
 
-    public Category(String name) {
+    public Category(String name, String image) {
         this.name = name;
+        this.image = image;
     }
 }
