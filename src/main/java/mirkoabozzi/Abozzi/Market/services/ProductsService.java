@@ -99,6 +99,18 @@ public class ProductsService {
         return this.productsRepository.findProductsByCategoryNameContaining(pageable, name);
     }
 
+    //FIND PRODUCT BY PRICE RANGE
+    public Page<Product> findByPriceRange(int pages, int size, String sortBy, int min, int max) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        return this.productsRepository.findByPriceRange(pageable, min, max);
+    }
+
+    //FIND PRODUCT ON DISCOUNT
+    public Page<Product> findByDiscountStatus(int pages, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        return this.productsRepository.findByDiscountStatus(pageable);
+    }
+
     //ADD DISCOUNT TO PRODUCT
     public Product addDiscount(UUID productId, ProductDiscountDTO payload) {
         Product productFound = this.findById(productId);

@@ -94,6 +94,27 @@ public class ProductsController {
         return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
     }
 
+    //GET FIND BY PRICE RANGE
+    @GetMapping("/price")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Page<Product> findByPriceRange(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "20") int size,
+                                          @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                          @RequestParam int min,
+                                          @RequestParam int max) {
+        return this.productsService.findByPriceRange(page, size, sortBy, min, max);
+    }
+
+    //GET FIND BY DISCOUNT STATUS
+    @GetMapping("/discount")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Page<Product> findByDiscountStatus(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "20") int size,
+                                              @RequestParam(defaultValue = "lastUpdate") String sortBy
+    ) {
+        return this.productsService.findByDiscountStatus(page, size, sortBy);
+    }
+
     //UPDATE ADD DISCOUNT
     @PutMapping("/discount/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")

@@ -18,4 +18,10 @@ public interface ProductsRepository extends JpaRepository<Product, UUID> {
 
     @Query("SELECT p FROM Product p JOIN p.category c WHERE LOWER(c.name) = LOWER(:name)")
     Page<Product> findProductsByCategoryNameContaining(Pageable pageable, @Param("name") String name);
+
+    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :min AND :max")
+    Page<Product> findByPriceRange(Pageable pageable, @Param("min") int min, @Param("max") int max);
+
+    @Query("SELECT p FROM Product p WHERE p.discountStatus = true")
+    Page<Product> findByDiscountStatus(Pageable pageable);
 }
