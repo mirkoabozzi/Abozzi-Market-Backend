@@ -4,8 +4,13 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import mirkoabozzi.Abozzi.Market.entities.PayPal;
+import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
+import mirkoabozzi.Abozzi.Market.repositories.PayPalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +19,8 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class PayPalService {
     private final APIContext apiContext;
+    @Autowired
+    private PayPalRepository payPalRepository;
 
     public Payment createPayment(
             Double total,
@@ -57,6 +64,23 @@ public class PayPalService {
 
         PaymentExecution paymentExecution = new PaymentExecution();
         paymentExecution.setPayerId(payerId);
-        return payment.execute(apiContext, paymentExecution);
+
+        Payment executedPayment = payment.execute(apiContext, paymentExecution);
+
+        PayPal newPayment = new PayPal();
+        newPayment.setPayerId(payerId);
+        newPayment.setPaymentDate(LocalDateTime.now());
+        newPayment.setTotal(Double.valueOf(executedPayment.getTransactions().getFirst().getAmount().getTotal()));
+        newPayment.setDescription(executedPayment.getTransactions().getFirst().getDescription());
+        newPayment.setPaymentId(executedPayment.getId());
+        newPayment.setStatus(executedPayment.getState());
+
+        this.payPalRepository.save(newPayment);
+
+        return executedPayment;
+    }
+
+    public PayPal findById(String id) {
+        return this.payPalRepository.findByPaymentId(id).orElseThrow(() -> new NotFoundException("Payment whit ID " + id + " not found"));
     }
 }

@@ -41,12 +41,14 @@ public class PayPalController {
     @PostMapping("/execute")
     public String executePayment(
             @RequestParam("paymentId") String paymentId,
-            @RequestParam("payerId") String payerId
+            @RequestParam("payerId") String payerId,
+            @RequestParam("approvedUrl") String approvedUrl,
+            @RequestParam("failedUrl") String failedUrl
     ) throws PayPalRESTException {
         Payment payment = this.payPalService.executePayment(paymentId, payerId);
         if (payment.getState().equals("approved")) {
-            return "Payment approved";
+            return "redirect:/" + approvedUrl;
         }
-        return "Payment failed!";
+        return "redirect:/" + failedUrl;
     }
 }

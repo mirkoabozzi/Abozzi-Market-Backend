@@ -34,10 +34,12 @@ public class OrdersService {
     private OrderDetailsService orderDetailsService;
     @Autowired
     private MailgunSender mailgunSender;
+    @Autowired
+    private PayPalService payPalService;
 
     //POST SAVE ORDER
     public Order saveOrder(OrdersDTO payload) {
-        Payment paymentFound = this.paymentsService.findById(UUID.fromString(payload.payment()));
+        PayPal paymentFound = this.payPalService.findById(payload.payment());
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
         Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
         Order newOrder = new Order(LocalDate.now(), OrdersState.PROCESSING, userFound, null, shipmentFound);

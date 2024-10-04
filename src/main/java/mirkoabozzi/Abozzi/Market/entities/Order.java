@@ -32,7 +32,7 @@ public class Order {
 
     @OneToOne
     @JoinColumn(name = "payment_id")
-    private Payment payment;
+    private PayPal payment;
 
     @ManyToOne
     @JoinColumn(name = "shipment_id")
@@ -42,7 +42,7 @@ public class Order {
     private List<OrderDetail> orderDetailList;
 
 
-    public Order(LocalDate orderDate, OrdersState ordersState, User user, Payment payment, Shipment shipment) {
+    public Order(LocalDate orderDate, OrdersState ordersState, User user, PayPal payment, Shipment shipment) {
         this.orderDate = orderDate;
         this.ordersState = ordersState;
         this.user = user;
