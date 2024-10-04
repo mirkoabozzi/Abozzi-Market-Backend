@@ -2,10 +2,10 @@ package mirkoabozzi.Abozzi.Market.seciurity;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer "))
-            throw new UnavailableException("Token required");
+            throw new UnauthorizedException("Token required");
         String token = header.substring(7);
         this.jwtTools.verifyToken(token);
         String id = jwtTools.extractIdFromToken(token);

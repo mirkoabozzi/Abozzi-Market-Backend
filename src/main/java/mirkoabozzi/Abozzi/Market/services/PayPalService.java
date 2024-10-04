@@ -4,6 +4,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import mirkoabozzi.Abozzi.Market.dto.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.entities.PayPal;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.PayPalRepository;
@@ -22,37 +23,29 @@ public class PayPalService {
     @Autowired
     private PayPalRepository payPalRepository;
 
-    public Payment createPayment(
-            Double total,
-            String currency,
-            String method,
-            String intent,
-            String description,
-            String cancelUrl,
-            String successUrl
-    ) throws PayPalRESTException {
+    public Payment createPayment(PayPalDTO payload) throws PayPalRESTException {
         Amount amount = new Amount();
-        amount.setCurrency(currency);
-        amount.setTotal(String.format(Locale.forLanguageTag(currency), "%.2f", total));
+        amount.setCurrency(payload.currency());
+        amount.setTotal(String.format(Locale.forLanguageTag(payload.currency()), "%.2f", payload.sum()));
 
         Transaction transaction = new Transaction();
-        transaction.setDescription(description);
+        transaction.setDescription(payload.description());
         transaction.setAmount(amount);
 
         List<Transaction> transactionList = new ArrayList<>();
         transactionList.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod(method);
+        payer.setPaymentMethod(payload.method());
 
         Payment payment = new Payment();
-        payment.setIntent(intent);
+        payment.setIntent(payload.intent());
         payment.setPayer(payer);
         payment.setTransactions(transactionList);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(cancelUrl);
-        redirectUrls.setReturnUrl(successUrl);
+        redirectUrls.setCancelUrl(payload.cancelUrl());
+        redirectUrls.setReturnUrl(payload.successUrl());
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);

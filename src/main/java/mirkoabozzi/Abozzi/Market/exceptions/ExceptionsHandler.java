@@ -57,7 +57,7 @@ public class ExceptionsHandler {
     public ErrorsDTO handleForbiddenException(AuthorizationDeniedException ex) {
         return new ErrorsDTO("You don't have permission access", LocalDateTime.now());
     }
-    
+
     @ExceptionHandler(PayPalRESTException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handlePayPalRESTException(PayPalRESTException ex) {
