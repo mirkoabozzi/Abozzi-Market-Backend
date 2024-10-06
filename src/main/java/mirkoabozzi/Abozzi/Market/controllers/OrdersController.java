@@ -69,4 +69,10 @@ public class OrdersController {
     public void deleteMyOrder(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
         this.ordersService.deleteMyOrder(id, userAuthenticated.getId());
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Order getMyOrderById(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
+        return this.ordersService.findMyOrderById(id, userAuthenticated.getId());
+    }
 }

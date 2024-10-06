@@ -5,6 +5,7 @@ import mirkoabozzi.Abozzi.Market.entities.*;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
+import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.repositories.OrdersRepository;
 import mirkoabozzi.Abozzi.Market.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,13 @@ public class OrdersService {
     //DELETE MY ORDER
     public void deleteMyOrder(UUID id, UUID userId) {
         this.ordersRepository.delete(this.ordersRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Order whit ID " + id + " not found")));
+    }
+
+    //GET MY ORDER
+    public Order findMyOrderById(UUID id, UUID userId) {
+        User userFound = this.usersService.findById(userId);
+        Order orderFound = this.ordersRepository.findById(id).orElseThrow(() -> new NotFoundException("Order whit ID " + id + " not found"));
+        if (userFound.getId() != orderFound.getUser().getId()) throw new UnauthorizedException("This isn't you order!");
+        return orderFound;
     }
 }

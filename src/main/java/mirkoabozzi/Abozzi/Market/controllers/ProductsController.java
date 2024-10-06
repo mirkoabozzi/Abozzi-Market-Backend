@@ -40,11 +40,17 @@ public class ProductsController {
 
     // GET ALL
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "15") int size,
                                         @RequestParam(defaultValue = "name") String sortBy) {
         return this.productsService.getAllProducts(page, size, sortBy);
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable UUID id) {
+        return this.productsService.findById(id);
     }
 
     //UPDATE
