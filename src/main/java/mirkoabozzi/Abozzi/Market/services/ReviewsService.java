@@ -47,6 +47,12 @@ public class ReviewsService {
         return this.reviewsRepository.findByUserId(pageable, id);
     }
 
+    //GET REVIEWS BY PRODUCT ID
+    public Page<Review> getReviewsByProductId(int page, int size, String sortBy, UUID id) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.reviewsRepository.findByProductId(pageable, id);
+    }
+
     //UPDATE
     public Review updateReview(UUID id, ReviewsDTO payload) {
         Review reviewFound = this.findById(id);
@@ -60,5 +66,4 @@ public class ReviewsService {
     public void removeMyReview(UUID id, UUID userId) {
         this.reviewsRepository.delete(this.reviewsRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Review with id " + id + " not found on DB")));
     }
-
 }

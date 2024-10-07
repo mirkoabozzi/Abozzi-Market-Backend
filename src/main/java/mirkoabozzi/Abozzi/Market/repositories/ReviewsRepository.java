@@ -16,4 +16,6 @@ public interface ReviewsRepository extends JpaRepository<Review, UUID> {
     Page<Review> findByUserId(Pageable pageable, UUID userId);
 
     Optional<Review> findByIdAndUserId(UUID id, UUID userId);
+
+    Page<Review> findByProductId(Pageable pageable, UUID productId);
 }

@@ -44,6 +44,16 @@ public class ReviewsController {
         return this.reviewsService.getMyReviews(page, size, sortBy, userAuthenticated.getId());
     }
 
+    //GET REVIEWS BY PRODUCT ID
+    @GetMapping("/product/{id}")
+    public Page<Review> getReviewsByProductId(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size,
+                                              @RequestParam(defaultValue = "publishDate") String sortBy,
+                                              @PathVariable UUID id
+    ) {
+        return this.reviewsService.getReviewsByProductId(page, size, sortBy, id);
+    }
+
     //PUT UPDATE MY REVIEWS
     @PutMapping("/me/{id}")
     public Review updateReview(@PathVariable UUID id, @RequestBody @Validated ReviewsDTO payload, BindingResult validation) {
