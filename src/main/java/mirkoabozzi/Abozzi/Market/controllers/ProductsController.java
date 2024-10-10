@@ -39,16 +39,17 @@ public class ProductsController {
     }
 
     // GET ALL
-    @GetMapping
+    @GetMapping("/all")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "15") int size,
-                                        @RequestParam(defaultValue = "name") String sortBy) {
+                                        @RequestParam(defaultValue = "lastUpdate") String sortBy) {
         return this.productsService.getAllProducts(page, size, sortBy);
     }
 
     //GET BY ID
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Product getProductById(@PathVariable UUID id) {
         return this.productsService.findById(id);
     }
@@ -82,7 +83,7 @@ public class ProductsController {
 
     //GET FIND BY PRODUCTS NAME
     @GetMapping("/name")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByProductsContainsName(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "20") int size,
                                                     @RequestParam(defaultValue = "lastUpdate") String sortBy,
@@ -92,7 +93,7 @@ public class ProductsController {
 
     //GET PRODUCTS BY CATEGORY NAME
     @GetMapping("/category")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "20") int size,
                                                     @RequestParam(defaultValue = "name") String sortBy,
@@ -102,7 +103,7 @@ public class ProductsController {
 
     //GET FIND BY PRICE RANGE
     @GetMapping("/price")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByPriceRange(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "20") int size,
                                           @RequestParam(defaultValue = "lastUpdate") String sortBy,

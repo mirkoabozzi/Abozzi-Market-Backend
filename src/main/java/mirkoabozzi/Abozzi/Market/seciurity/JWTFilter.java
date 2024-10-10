@@ -44,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
-        List<String> patternList = Arrays.asList("/authentication/**", "/categories", "/products", "/reviews/product/**");
+        List<String> patternList = Arrays.asList("/authentication/**", "/categories/**", "/products/**", "/reviews/product/**");
         AntPathMatcher newAntPath = new AntPathMatcher();
         return patternList.stream().anyMatch(pattern -> newAntPath.match(pattern, path));
     }

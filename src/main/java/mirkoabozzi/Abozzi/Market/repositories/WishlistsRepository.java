@@ -16,5 +16,5 @@ public interface WishlistsRepository extends JpaRepository<Wishlist, UUID> {
 
     Page<Wishlist> findByUserId(Pageable pageable, UUID userId);
 
-    Optional<Wishlist> findByIdAndUserId(UUID id, UUID userId);
+    Optional<Wishlist> findByProductIdAndUserId(UUID productId, UUID userId);
 }

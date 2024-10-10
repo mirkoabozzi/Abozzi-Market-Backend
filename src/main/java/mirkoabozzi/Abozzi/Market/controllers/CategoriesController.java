@@ -38,7 +38,7 @@ public class CategoriesController {
     }
 
     //GET ALL
-    @GetMapping
+    @GetMapping()
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Category> getAllCategory(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "10") int size,

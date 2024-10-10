@@ -48,6 +48,6 @@ public class WishlistsService {
 
     //REMOVE PRODUCT FROM MY WISHLIST
     public void removeFromWishlist(UUID id, UUID userId) {
-        this.wishlistsRepository.delete(this.wishlistsRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Wishlist with id " + id + " not found on DB")));
+        this.wishlistsRepository.delete(this.wishlistsRepository.findByProductIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Product with id " + id + " not found on your wishlist")));
     }
 }
