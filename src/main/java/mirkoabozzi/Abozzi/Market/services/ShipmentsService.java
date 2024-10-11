@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import mirkoabozzi.Abozzi.Market.dto.ShipmentsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Shipment;
+import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.ShipmentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ import java.util.UUID;
 public class ShipmentsService {
     @Autowired
     private ShipmentsRepository shipmentsRepository;
+    @Autowired
+    private UsersService usersService;
 
     //POST SAVE
-    public Shipment saveShipment(ShipmentsDTO payload) {
-        Shipment newShipment = new Shipment(payload.address(), payload.number(), payload.city(), payload.zipCode());
+    public Shipment saveShipment(ShipmentsDTO payload, UUID authenticatedUser) {
+        User userFound = this.usersService.findById(authenticatedUser);
+        Shipment newShipment = new Shipment(payload.address(), payload.number(), payload.city(), payload.zipCode(), userFound);
         return this.shipmentsRepository.save(newShipment);
     }
 
@@ -28,10 +32,10 @@ public class ShipmentsService {
         return this.shipmentsRepository.findById(id).orElseThrow(() -> new NotFoundException("Shipment whit ID " + id + " not found"));
     }
 
-    //GET ALL
-    public Page<Shipment> getAllShipments(int page, int size, String sortBy) {
+    //GET MY
+    public Page<Shipment> getMyShipments(int page, int size, String sortBy, UUID authenticatedUserId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return this.shipmentsRepository.findAll(pageable);
+        return this.shipmentsRepository.findByUserId(pageable, authenticatedUserId);
     }
 
     //UPDATE
@@ -44,8 +48,8 @@ public class ShipmentsService {
         return this.shipmentsRepository.save(shipmentFound);
     }
 
-    //DELETE
-    public void deleteShipment(UUID id) {
-        this.shipmentsRepository.delete(this.findById(id));
+    //DELETE MY SHIPMENT ADDRESS
+    public void deleteShipment(UUID id, UUID authenticatedUserId) {
+        this.shipmentsRepository.delete(this.shipmentsRepository.findByIdAndUserId(id, authenticatedUserId).orElseThrow(() -> new NotFoundException("Shipment with id " + id + " not found")));
     }
 }

@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
+import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -75,7 +76,7 @@ public class OrdersService {
 
     //GET MY ORDERS
     public Page<Order> getMyOrders(int page, int size, String sortBy, UUID id) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         return this.ordersRepository.findByUserId(pageable, id);
     }
 
@@ -90,5 +91,12 @@ public class OrdersService {
         Order orderFound = this.ordersRepository.findById(id).orElseThrow(() -> new NotFoundException("Order whit ID " + id + " not found"));
         if (userFound.getId() != orderFound.getUser().getId()) throw new UnauthorizedException("This isn't you order!");
         return orderFound;
+    }
+
+    //UPDATE ORDER STATE
+    public Order updateOrderState(OrdersStateDTO payload) {
+        Order orderFound = this.findById(UUID.fromString(payload.order()));
+        orderFound.setOrdersState(OrdersState.valueOf(payload.state()));
+        return this.ordersRepository.save(orderFound);
     }
 }

@@ -1,10 +1,7 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +24,15 @@ public class Shipment {
     private String city;
     private String zipCode;
 
-    public Shipment(String address, int number, String city, String zipCode) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Shipment(String address, int number, String city, String zipCode, User user) {
         this.address = address;
         this.number = number;
         this.city = city;
         this.zipCode = zipCode;
+        this.user = user;
     }
 }

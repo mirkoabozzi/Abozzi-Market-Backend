@@ -3,7 +3,9 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
+import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.enums.Role;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
@@ -82,5 +84,12 @@ public class UsersService {
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         userFound.setAvatar(url);
         this.usersRepository.save(userFound);
+    }
+
+    //PUT UPDATE USER ROLE
+    public User updateUserRole(UsersRoleDTO payload) {
+        User userFound = this.findById(UUID.fromString(payload.user()));
+        userFound.setRole(Role.valueOf(payload.role().toUpperCase()));
+        return this.usersRepository.save(userFound);
     }
 }

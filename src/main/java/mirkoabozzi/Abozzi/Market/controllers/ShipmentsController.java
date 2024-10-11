@@ -2,12 +2,13 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import mirkoabozzi.Abozzi.Market.dto.ShipmentsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Shipment;
+import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.ShipmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,30 +25,40 @@ public class ShipmentsController {
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Shipment saveShipment(@RequestBody @Validated ShipmentsDTO payload, BindingResult validation) {
+    public Shipment saveShipment(@RequestBody @Validated ShipmentsDTO payload, @AuthenticationPrincipal User authenticatedUser, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.shipmentsService.saveShipment(payload);
+            return this.shipmentsService.saveShipment(payload, authenticatedUser.getId());
         }
     }
 
-    //GET ALL
-    @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Shipment> getAllShipment(@RequestParam(defaultValue = "0") int page,
-                                         @RequestParam(defaultValue = "10") int size,
-                                         @RequestParam(defaultValue = "city") String sortBy) {
-        return this.shipmentsService.getAllShipments(page, size, sortBy);
+    //GET MY ADDRESS
+    @GetMapping("/me")
+    public Page<Shipment> getMyShipment(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "city") String sortBy,
+                                        @AuthenticationPrincipal User authenticatedUser
+    ) {
+        return this.shipmentsService.getMyShipments(page, size, sortBy, authenticatedUser.getId());
+    }
+
+    //UPDATE SHIPMENT ADDRESS
+    @PutMapping("/me/{id}")
+    public Shipment updateShipment(@PathVariable UUID id, @RequestBody @Validated ShipmentsDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return this.shipmentsService.updateShipment(id, payload);
+        }
     }
 
     //DELETE
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/me/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteShipment(@PathVariable UUID id) {
-        this.shipmentsService.deleteShipment(id);
+    public void deleteShipment(@PathVariable UUID id, @AuthenticationPrincipal User authenticatedUser) {
+        this.shipmentsService.deleteShipment(id, authenticatedUser.getId());
     }
 }

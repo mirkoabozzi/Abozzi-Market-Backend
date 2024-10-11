@@ -114,7 +114,7 @@ public class ProductsController {
 
     //GET FIND BY DISCOUNT STATUS
     @GetMapping("/discount")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByDiscountStatus(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "20") int size,
                                               @RequestParam(defaultValue = "lastUpdate") String sortBy
@@ -123,7 +123,7 @@ public class ProductsController {
     }
 
     //UPDATE ADD DISCOUNT
-    @PutMapping("/discount/{id}")
+    @PutMapping("/add/discount/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Product addDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {

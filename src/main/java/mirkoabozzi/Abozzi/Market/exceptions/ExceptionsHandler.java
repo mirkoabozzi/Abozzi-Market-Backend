@@ -70,4 +70,10 @@ public class ExceptionsHandler {
     public ErrorsDTO handleNoResourceFoundException(NoResourceFoundException ex) {
         return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
 }

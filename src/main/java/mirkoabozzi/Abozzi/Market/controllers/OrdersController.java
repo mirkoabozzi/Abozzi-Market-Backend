@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
+import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Order;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -70,9 +71,22 @@ public class OrdersController {
         this.ordersService.deleteMyOrder(id, userAuthenticated.getId());
     }
 
+    //GET MYORDER BY ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Order getMyOrderById(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
         return this.ordersService.findMyOrderById(id, userAuthenticated.getId());
+    }
+
+    //UPDATE ORDER STATE
+    @PutMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Order updateOrder(@RequestBody @Validated OrdersStateDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return this.ordersService.updateOrderState(payload);
+        }
     }
 }

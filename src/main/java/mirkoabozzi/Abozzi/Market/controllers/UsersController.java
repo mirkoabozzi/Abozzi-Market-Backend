@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
+import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,11 @@ public class UsersController {
     @PostMapping("/me/avatar")
     public void imgUpload(@RequestParam("avatar") MultipartFile img, @AuthenticationPrincipal User userAuthenticated) throws IOException, MaxUploadSizeExceededException {
         this.usersService.imgUpload(img, userAuthenticated.getId());
+    }
+
+    @PutMapping("/role")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User updateUserRole(@RequestBody UsersRoleDTO payload) {
+        return this.usersService.updateUserRole(payload);
     }
 }
