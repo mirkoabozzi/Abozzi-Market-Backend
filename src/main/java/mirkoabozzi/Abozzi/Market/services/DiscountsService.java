@@ -1,10 +1,13 @@
 package mirkoabozzi.Abozzi.Market.services;
 
+import jakarta.transaction.Transactional;
 import mirkoabozzi.Abozzi.Market.dto.DiscountsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Discount;
+import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.DiscountsRepository;
+import mirkoabozzi.Abozzi.Market.repositories.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,12 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DiscountsService {
     @Autowired
     private DiscountsRepository discountsRepository;
+    @Autowired
+    private ProductsRepository productsRepository;
 
     //POST SAVE
     public Discount saveDiscount(DiscountsDTO payload) {
@@ -48,7 +54,15 @@ public class DiscountsService {
     }
 
     //DELETE
-    public void deleteDiscount(UUID id) {
-        this.discountsRepository.delete(this.findById(id));
+    @Transactional
+    public void deleteDiscount(UUID discountId) {
+        Discount discountFound = this.findById(discountId);
+        List<Product> productsWithDiscount = this.productsRepository.findByDiscountListContaining(discountFound);
+        for (Product product : productsWithDiscount) {
+            product.getDiscountList().remove(discountFound);
+            product.setDiscountStatus(false);
+            productsRepository.save(product);
+        }
+        this.discountsRepository.delete(discountFound);
     }
 }

@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +41,14 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "discount_id"))
     private List<Discount> discountList;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Review> reviewList;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<OrderDetail> orderDetailsList;
+
     public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, boolean discountStatus, Category category) {
         this.name = name;
         this.description = description;
@@ -51,5 +60,7 @@ public class Product {
         this.discountStatus = discountStatus;
         this.category = category;
         this.discountList = new ArrayList<>();
+        this.reviewList = new ArrayList<>();
+        this.orderDetailsList = new ArrayList<>();
     }
 }
