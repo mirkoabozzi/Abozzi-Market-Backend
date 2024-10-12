@@ -135,7 +135,7 @@ public class ProductsController {
     }
 
     //REMOVE DISCOUNT
-    @DeleteMapping("/discount/{id}")
+    @DeleteMapping("/remove/discount/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Product removeDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
