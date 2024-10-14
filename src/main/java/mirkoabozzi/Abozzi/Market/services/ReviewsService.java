@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -32,7 +32,7 @@ public class ReviewsService {
             throw new BadRequestException("You already have a review for this product!");
         User userFound = this.usersService.findById(authenticatedUserId);
         Product productFound = this.productsService.findById(UUID.fromString(payload.product()));
-        Review newReview = new Review(payload.rating(), payload.comment(), LocalDate.now(), LocalDate.now(), userFound, productFound);
+        Review newReview = new Review(payload.rating(), payload.comment(), LocalDateTime.now(), LocalDateTime.now(), userFound, productFound);
         return this.reviewsRepository.save(newReview);
     }
 
@@ -58,7 +58,7 @@ public class ReviewsService {
         Review reviewFound = this.findById(id);
         reviewFound.setComment(payload.comment());
         reviewFound.setRating(payload.rating());
-        reviewFound.setUpdatedAt(LocalDate.now());
+        reviewFound.setUpdatedAt(LocalDateTime.now());
         return this.reviewsRepository.save(reviewFound);
     }
 

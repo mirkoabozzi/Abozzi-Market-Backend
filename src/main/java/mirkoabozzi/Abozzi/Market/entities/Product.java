@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,8 +26,8 @@ public class Product {
     private String description;
     private double price;
     private long quantityAvailable;
-    private LocalDate createdAt;
-    private LocalDate lastUpdate;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdate;
     private String imgUrl;
     private boolean discountStatus;
 
@@ -49,12 +49,12 @@ public class Product {
     @JsonIgnore
     private List<OrderDetail> orderDetailsList;
 
-    public Product(String name, String description, double price, long quantityAvailable, LocalDate lastUpdate, String imgUrl, boolean discountStatus, Category category) {
+    public Product(String name, String description, double price, long quantityAvailable, LocalDateTime lastUpdate, String imgUrl, boolean discountStatus, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantityAvailable = quantityAvailable;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.lastUpdate = lastUpdate;
         this.imgUrl = imgUrl;
         this.discountStatus = discountStatus;

@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,10 +24,10 @@ public class Discount {
     private UUID id;
     private String description;
     private double percentage;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-    public Discount(String description, double percentage, LocalDate startDate, LocalDate endDate) {
+    public Discount(String description, double percentage, LocalDateTime startDate, LocalDateTime endDate) {
         this.description = description;
         this.percentage = percentage;
         this.startDate = startDate;

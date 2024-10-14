@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,8 +21,8 @@ public class Review {
     private UUID id;
     private int rating;
     private String comment;
-    private LocalDate publishDate;
-    private LocalDate updatedAt;
+    private LocalDateTime publishDate;
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,7 +32,7 @@ public class Review {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Review(int rating, String comment, LocalDate publishDate, LocalDate updatedAt, User user, Product product) {
+    public Review(int rating, String comment, LocalDateTime publishDate, LocalDateTime updatedAt, User user, Product product) {
         this.rating = rating;
         this.comment = comment;
         this.publishDate = publishDate;

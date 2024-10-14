@@ -3,7 +3,7 @@ package mirkoabozzi.Abozzi.Market.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record DiscountsDTO(
         @NotEmpty(message = "Description is required. ")
@@ -11,8 +11,8 @@ public record DiscountsDTO(
         @NotNull(message = "Percentage is required. ")
         double percentage,
         @NotNull(message = "Start date is required. ")
-        LocalDate startDate,
+        LocalDateTime startDate,
         @NotNull(message = "End date is required. ")
-        LocalDate endDate
+        LocalDateTime endDate
 ) {
 }

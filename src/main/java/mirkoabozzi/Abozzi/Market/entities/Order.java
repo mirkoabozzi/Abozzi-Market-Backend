@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class Order {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
     @Enumerated(EnumType.STRING)
     private OrdersState ordersState;
 
@@ -42,7 +42,7 @@ public class Order {
     private List<OrderDetail> orderDetailList;
 
 
-    public Order(LocalDate orderDate, OrdersState ordersState, User user, PayPal payment, Shipment shipment) {
+    public Order(LocalDateTime orderDate, OrdersState ordersState, User user, PayPal payment, Shipment shipment) {
         this.orderDate = orderDate;
         this.ordersState = ordersState;
         this.user = user;

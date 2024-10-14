@@ -6,6 +6,7 @@ import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -47,9 +49,18 @@ public class UsersController {
         this.usersService.imgUpload(img, userAuthenticated.getId());
     }
 
+    //PUT CHANGE USER ROLE
     @PutMapping("/role")
     @PreAuthorize("hasAuthority('ADMIN')")
     public User updateUserRole(@RequestBody UsersRoleDTO payload) {
         return this.usersService.updateUserRole(payload);
+    }
+
+    //DELET USER
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteUser(@PathVariable UUID id) {
+        this.usersService.deleteUser(id);
     }
 }

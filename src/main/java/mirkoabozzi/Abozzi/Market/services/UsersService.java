@@ -92,4 +92,10 @@ public class UsersService {
         userFound.setRole(Role.valueOf(payload.role().toUpperCase()));
         return this.usersRepository.save(userFound);
     }
+
+    //DELETE
+    public void deleteUser(UUID id) {
+        User userFound = this.findById(id);
+        this.usersRepository.delete(userFound);
+    }
 }

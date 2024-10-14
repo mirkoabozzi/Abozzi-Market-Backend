@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -44,7 +44,7 @@ public class ProductsService {
                 payload.description(),
                 payload.price(),
                 payload.quantityAvailable(),
-                LocalDate.now(),
+                LocalDateTime.now(),
                 "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.description(),
                 false,
                 categoryFound);
@@ -70,7 +70,7 @@ public class ProductsService {
         productFound.setPrice(payload.price());
         productFound.setQuantityAvailable(payload.quantityAvailable());
         productFound.setCategory(categoryFound);
-        productFound.setLastUpdate(LocalDate.now());
+        productFound.setLastUpdate(LocalDateTime.now());
         return this.productsRepository.save(productFound);
     }
 

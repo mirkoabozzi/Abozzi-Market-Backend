@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,8 +26,6 @@ public class OrdersService {
     ProductsService productsService;
     @Autowired
     private OrdersRepository ordersRepository;
-    @Autowired
-    private PaymentsService paymentsService;
     @Autowired
     private UsersService usersService;
     @Autowired
@@ -44,7 +42,7 @@ public class OrdersService {
         PayPal paymentFound = this.payPalService.findById(payload.payment());
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
         Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
-        Order newOrder = new Order(LocalDate.now(), OrdersState.PROCESSING, userFound, null, shipmentFound);
+        Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound, null, shipmentFound);
         List<OrderDetail> orderDetails = payload.orderDetails().stream().map(detailDTO -> {
             Product product = this.productsService.findById(UUID.fromString(detailDTO.product()));
             if (product.getQuantityAvailable() < detailDTO.quantity())
