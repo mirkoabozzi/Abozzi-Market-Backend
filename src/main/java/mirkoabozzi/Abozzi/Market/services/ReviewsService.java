@@ -1,11 +1,13 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import mirkoabozzi.Abozzi.Market.dto.ReviewsDTO;
+import mirkoabozzi.Abozzi.Market.dto.ReviewsUpdateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.entities.Review;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
+import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.repositories.ReviewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,8 +56,10 @@ public class ReviewsService {
     }
 
     //UPDATE
-    public Review updateReview(UUID id, ReviewsDTO payload) {
+    public Review updateReview(UUID id, ReviewsUpdateDTO payload, UUID authenticatedUserId) {
         Review reviewFound = this.findById(id);
+        if (!reviewFound.getUser().getId().equals(authenticatedUserId))
+            throw new UnauthorizedException("Unauthorized!");
         reviewFound.setComment(payload.comment());
         reviewFound.setRating(payload.rating());
         reviewFound.setUpdatedAt(LocalDateTime.now());
@@ -64,6 +68,8 @@ public class ReviewsService {
 
     //REMOVE PRODUCT FROM MY WISHLIST
     public void removeMyReview(UUID id, UUID userId) {
-        this.reviewsRepository.delete(this.reviewsRepository.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Review with id " + id + " not found on DB")));
+        Review reviewFound = this.findById(id);
+        if (!reviewFound.getUser().getId().equals(userId)) throw new UnauthorizedException("Unauthorized!");
+        this.reviewsRepository.delete(reviewFound);
     }
 }

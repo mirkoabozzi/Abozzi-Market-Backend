@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import mirkoabozzi.Abozzi.Market.dto.ReviewsDTO;
+import mirkoabozzi.Abozzi.Market.dto.ReviewsUpdateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Review;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -56,12 +57,12 @@ public class ReviewsController {
 
     //PUT UPDATE MY REVIEWS
     @PutMapping("/me/{id}")
-    public Review updateReview(@PathVariable UUID id, @RequestBody @Validated ReviewsDTO payload, BindingResult validation) {
+    public Review updateReview(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated, @RequestBody @Validated ReviewsUpdateDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.reviewsService.updateReview(id, payload);
+            return this.reviewsService.updateReview(id, payload, userAuthenticated.getId());
         }
     }
 
