@@ -63,7 +63,7 @@ public class OrdersService {
 
     //GET ALL
     public Page<Order> getAllOrders(int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         return this.ordersRepository.findAll(pageable);
     }
 

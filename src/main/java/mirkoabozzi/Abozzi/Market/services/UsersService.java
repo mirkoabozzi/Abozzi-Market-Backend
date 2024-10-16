@@ -98,4 +98,10 @@ public class UsersService {
         User userFound = this.findById(id);
         this.usersRepository.delete(userFound);
     }
+
+    //FIND BY NAME
+    public Page<User> findByName(int pages, int size, String sortBy, String user) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        return this.usersRepository.findByNameContainingIgnoringCaseOrSurnameContainingIgnoreCase(pageable, user, user);
+    }
 }

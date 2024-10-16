@@ -41,7 +41,7 @@ public class CategoriesController {
     @GetMapping("/all")
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Category> getAllCategory(@RequestParam(defaultValue = "0") int page,
-                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "20") int size,
                                          @RequestParam(defaultValue = "name") String sortBy) {
         return this.categoriesService.findAll(page, size, sortBy);
     }

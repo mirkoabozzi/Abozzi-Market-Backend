@@ -42,7 +42,7 @@ public class ProductsController {
     @GetMapping("/all")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "15") int size,
+                                        @RequestParam(defaultValue = "20") int size,
                                         @RequestParam(defaultValue = "lastUpdate") String sortBy) {
         return this.productsService.getAllProducts(page, size, sortBy);
     }

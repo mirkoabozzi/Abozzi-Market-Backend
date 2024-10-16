@@ -26,7 +26,7 @@ public class UsersController {
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "20") int size,
                                   @RequestParam(defaultValue = "name") String sortBy) {
         return this.usersService.findAll(page, size, sortBy);
     }
@@ -62,5 +62,16 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(@PathVariable UUID id) {
         this.usersService.deleteUser(id);
+    }
+
+
+    //GET BY NAME
+    @GetMapping("/name")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<User> findByName(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "20") int size,
+                                 @RequestParam(defaultValue = "surname") String sortBy,
+                                 @RequestParam String user) {
+        return this.usersService.findByName(page, size, sortBy, user);
     }
 }
