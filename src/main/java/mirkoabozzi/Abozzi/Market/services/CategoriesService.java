@@ -49,7 +49,7 @@ public class CategoriesService {
     //PUT UPDATE
     public Category updateCategory(UUID id, CategoriesDTO payload) {
         Category categoryFound = this.findById(id);
-        if (categoriesRepository.existsByNameIgnoreCase(payload.name()))
+        if (!categoryFound.getName().equals(payload.name()) && this.categoriesRepository.existsByNameIgnoreCase(payload.name()))
             throw new BadRequestException("Category " + payload.name() + " already on DB");
         categoryFound.setName(payload.name());
         return this.categoriesRepository.save(categoryFound);

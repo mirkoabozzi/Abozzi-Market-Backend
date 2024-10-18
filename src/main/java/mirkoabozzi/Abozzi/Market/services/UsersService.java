@@ -2,6 +2,9 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import mirkoabozzi.Abozzi.Market.dto.ResetUserPasswordRequest;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
@@ -11,10 +14,13 @@ import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import mirkoabozzi.Abozzi.Market.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -33,6 +39,10 @@ public class UsersService {
     private Cloudinary cloudinary;
     @Autowired
     private MailgunSender mailgunSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
+    @Value("${cors.config.local.host.router}")
+    private String localHostRouter;
 
     //FIND BY EMAIL
     public User findByEmail(String email) {
@@ -103,5 +113,21 @@ public class UsersService {
     public Page<User> findByName(int pages, int size, String sortBy, String user) {
         Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
         return this.usersRepository.findByNameContainingIgnoringCaseOrSurnameContainingIgnoreCase(pageable, user, user);
+    }
+
+    //RESET USER PASSWORD REQUEST
+    public void resetUserPasswordRequest(ResetUserPasswordRequest payload) throws MessagingException {
+        User userFound = this.findByEmail(payload.email());
+
+        MimeMessage msg = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(userFound.getEmail());
+        helper.setSubject("Richiesta reset password");
+        String content = "<h1>Password reset</h1>" +
+                "<p>Hai richiesto il reset della password, al seguente link puoi cambiare la tua password!</p>" +
+                "<p>" + localHostRouter + "/passwordReset/userId=" + userFound.getId() + "</p>" +
+                "<p>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p";
+        helper.setText(content, true);
+        this.javaMailSender.send(msg);
     }
 }

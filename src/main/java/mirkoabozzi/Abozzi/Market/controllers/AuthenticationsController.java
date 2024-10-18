@@ -1,5 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import jakarta.mail.MessagingException;
+import mirkoabozzi.Abozzi.Market.dto.ResetUserPasswordRequest;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersLoginDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersLoginRespDTO;
@@ -43,6 +45,18 @@ public class AuthenticationsController {
             throw new BadRequestException("Payload error: " + msg);
         } else {
             return new UsersLoginRespDTO(this.authenticationService.checkCredentialAndGenerateToken(payload));
+        }
+    }
+
+    //POST RESET PASSWORD REQUEST
+    @PostMapping("/reset")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void resetPassword(@RequestBody @Validated ResetUserPasswordRequest payload, BindingResult validation) throws MessagingException {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            this.usersService.resetUserPasswordRequest(payload);
         }
     }
 }
