@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import mirkoabozzi.Abozzi.Market.dto.ResetUserPassword;
 import mirkoabozzi.Abozzi.Market.dto.ResetUserPasswordRequest;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
@@ -126,8 +127,16 @@ public class UsersService {
         String content = "<h1>Password reset</h1>" +
                 "<p>Hai richiesto il reset della password, al seguente link puoi cambiare la tua password!</p>" +
                 "<p>" + localHostRouter + "/passwordReset/userId=" + userFound.getId() + "</p>" +
-                "<p>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p";
+                "<p>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p" +
+                "<p>Abozzi Market</p>";
         helper.setText(content, true);
         this.javaMailSender.send(msg);
+    }
+
+    //RESET USER PASSWORD
+    public void resetUserPassword(UUID id, ResetUserPassword payload) {
+        User userFound = this.findById(id);
+        userFound.setPassword(this.passwordEncoder.encode(payload.password()));
+        this.usersRepository.save(userFound);
     }
 }
