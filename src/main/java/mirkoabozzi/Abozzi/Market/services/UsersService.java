@@ -3,7 +3,6 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import mirkoabozzi.Abozzi.Market.dto.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.enums.Role;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -29,6 +27,8 @@ import java.util.UUID;
 
 @Service
 public class UsersService {
+    @Value("${cors.config.local.host.router}")
+    private String localHostRouter;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
@@ -39,8 +39,8 @@ public class UsersService {
     private MailgunSender mailgunSender;
     @Autowired
     private JavaMailSender javaMailSender;
-    @Value("${cors.config.local.host.router}")
-    private String localHostRouter;
+    @Autowired
+    private MailService mailService;
 
     //FIND BY EMAIL
     public User findByEmail(String email) {
@@ -116,18 +116,7 @@ public class UsersService {
     //RESET USER PASSWORD REQUEST
     public void resetUserPasswordRequest(ResetUserPasswordRequest payload) throws MessagingException {
         User userFound = this.findByEmail(payload.email());
-
-        MimeMessage msg = this.javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-        helper.setTo(userFound.getEmail());
-        helper.setSubject("Richiesta reset password");
-        String content = "<h1>Password reset</h1>" +
-                "<p>Hai richiesto il reset della password, al seguente link puoi cambiare la tua password!</p>" +
-                "<p>" + localHostRouter + "/passwordReset/userId=" + userFound.getId() + "</p>" +
-                "<p>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p" +
-                "<p>Abozzi Market</p>";
-        helper.setText(content, true);
-        this.javaMailSender.send(msg);
+        this.mailService.resetPasswordRequest(userFound);
     }
 
     //RESET USER PASSWORD

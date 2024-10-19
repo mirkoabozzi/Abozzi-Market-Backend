@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.exceptions;
 
 import com.paypal.base.rest.PayPalRESTException;
+import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.ErrorsDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,13 @@ public class ExceptionsHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorsDTO handleMessagingException(MessagingException ex) {
+        ex.printStackTrace();
         return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
     }
 }
