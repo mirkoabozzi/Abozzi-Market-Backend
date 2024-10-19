@@ -1,5 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import mirkoabozzi.Abozzi.Market.dto.ChangeUserPasswordDTO;
+import mirkoabozzi.Abozzi.Market.dto.ResetPasswordRespDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
@@ -73,5 +75,12 @@ public class UsersController {
                                  @RequestParam(defaultValue = "surname") String sortBy,
                                  @RequestParam String user) {
         return this.usersService.findByName(page, size, sortBy, user);
+    }
+
+    //PUT ME PASSWORD
+    @PutMapping("/me/password")
+    public ResetPasswordRespDTO updateMyPassword(@AuthenticationPrincipal User userAuthenticated, @RequestBody ChangeUserPasswordDTO payload) {
+        this.usersService.changeUserPassword(userAuthenticated.getId(), payload);
+        return new ResetPasswordRespDTO("Password changed");
     }
 }

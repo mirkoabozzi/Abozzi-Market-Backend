@@ -4,10 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import mirkoabozzi.Abozzi.Market.dto.ResetUserPassword;
-import mirkoabozzi.Abozzi.Market.dto.ResetUserPasswordRequest;
-import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
-import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
+import mirkoabozzi.Abozzi.Market.dto.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.enums.Role;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -137,6 +134,15 @@ public class UsersService {
     public void resetUserPassword(UUID id, ResetUserPassword payload) {
         User userFound = this.findById(id);
         userFound.setPassword(this.passwordEncoder.encode(payload.password()));
+        this.usersRepository.save(userFound);
+    }
+
+    //CHANGE MY PASSWORD
+    public void changeUserPassword(UUID id, ChangeUserPasswordDTO payload) {
+        User userFound = this.findById(id);
+        if (!this.passwordEncoder.matches(payload.oldPassword(), userFound.getPassword()))
+            throw new BadRequestException("Wrong password");
+        userFound.setPassword(this.passwordEncoder.encode(payload.newPassword()));
         this.usersRepository.save(userFound);
     }
 }
