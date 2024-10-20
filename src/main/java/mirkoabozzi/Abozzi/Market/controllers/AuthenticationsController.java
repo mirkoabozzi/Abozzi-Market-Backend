@@ -26,7 +26,7 @@ public class AuthenticationsController {
     //POST REGISTRATION
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public User saveUser(@RequestBody @Validated UsersDTO payload, BindingResult validation) {
+    public User saveUser(@RequestBody @Validated UsersDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);

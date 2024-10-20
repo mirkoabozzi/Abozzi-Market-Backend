@@ -131,4 +131,36 @@ public class MailService {
         helper.setText(content, true);
         this.javaMailSender.send(msg);
     }
+
+    public void userRegistrationEmail(User user) throws MessagingException {
+        MimeMessage msg = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(user.getEmail());
+        helper.setSubject("Benvenuto su Abozzi Market!");
+
+        String content =
+                "<!DOCTYPE html>" +
+                        "<html lang='it'>" +
+                        "<head>" +
+                        "<meta charset='UTF-8'>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "<title>Benvenuto su Abozzi Market!</title>" +
+                        "</head>" +
+                        "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;'>" +
+                        "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+                        "<h1 style='color: #1a51bf;'>Benvenuto, " + user.getName() + " " + user.getSurname() + "!</h1>" +
+                        "<p style='color: #333;'>Grazie per esserti unito a Abozzi Market!</p>" +
+                        "<p style='color: #333;'>Siamo lieti di averti con noi.</p>" +
+                        "<p style='color: #333;'>Puoi ora esplorare i nostri prodotti e iniziare a fare acquisti.</p>" +
+                        "<a href='" + localHostRouter + "' " +
+                        "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Vai allo shop</a>" +
+                        "<p style='color: #333; margin-top: 20px;'>Se hai domande o hai bisogno di assistenza, non esitare a contattarci.</p>" +
+                        "<small style='color: #333;'>Abozzi Market SNC</small>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>";
+
+        helper.setText(content, true);
+        this.javaMailSender.send(msg);
+    }
 }

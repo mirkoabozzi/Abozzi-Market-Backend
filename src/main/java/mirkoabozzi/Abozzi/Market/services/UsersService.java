@@ -53,7 +53,7 @@ public class UsersService {
     }
 
     //POST SAVE
-    public User saveUser(UsersDTO payload) {
+    public User saveUser(UsersDTO payload) throws MessagingException {
         if (this.usersRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " already on DB");
         User newUser = new User(
@@ -64,6 +64,7 @@ public class UsersService {
                 payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
         User userSaved = this.usersRepository.save(newUser);
 //        this.mailgunSender.sendRegistrationEmail(newUser);
+        this.mailService.userRegistrationEmail(userSaved);
         return userSaved;
     }
 
