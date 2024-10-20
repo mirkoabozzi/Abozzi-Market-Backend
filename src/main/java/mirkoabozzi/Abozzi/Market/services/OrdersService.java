@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
+import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
@@ -36,9 +37,11 @@ public class OrdersService {
     private MailgunSender mailgunSender;
     @Autowired
     private PayPalService payPalService;
+    @Autowired
+    private MailService mailService;
 
     //POST SAVE ORDER
-    public Order saveOrder(OrdersDTO payload) {
+    public Order saveOrder(OrdersDTO payload) throws MessagingException {
         PayPal paymentFound = this.payPalService.findById(payload.payment());
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
         Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
@@ -54,6 +57,7 @@ public class OrdersService {
         Order savedOrder = this.ordersRepository.save(newOrder);
         this.orderDetailsService.saveAllOrderDetails(orderDetails);
 //        this.mailgunSender.sendOrderCreatedEmail(userFound);
+        this.mailService.orderConfirmationEmail(userFound, newOrder, orderDetails, paymentFound, shipmentFound);
         return savedOrder;
     }
 

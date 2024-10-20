@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Order;
@@ -28,7 +29,7 @@ public class OrdersController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Order saveOrder(@RequestBody @Validated OrdersDTO payload, BindingResult validation) {
+    public Order saveOrder(@RequestBody @Validated OrdersDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);

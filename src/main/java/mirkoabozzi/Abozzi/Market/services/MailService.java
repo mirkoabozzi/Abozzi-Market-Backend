@@ -3,12 +3,14 @@ package mirkoabozzi.Abozzi.Market.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import mirkoabozzi.Abozzi.Market.dto.MailDTO;
-import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MailService {
@@ -57,6 +59,75 @@ public class MailService {
                         "</div>" +
                         "</body>" +
                         "</html>";
+        helper.setText(content, true);
+        this.javaMailSender.send(msg);
+    }
+
+    public void orderConfirmationEmail(User user, Order order, List<OrderDetail> orderDetails, PayPal payment, Shipment shipment) throws MessagingException {
+        MimeMessage msg = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(user.getEmail());
+        helper.setSubject("Riepilogo ordine");
+        String content =
+                "<!DOCTYPE html>" +
+                        "<html lang='it'>" +
+                        "<head>" +
+                        "<meta charset='UTF-8'>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "<title>Conferma Ordine</title>" +
+                        "</head>" +
+                        "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;'>" +
+                        "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+                        "<h1 style='color: #1a51bf;'>Conferma Ordine</h1>" +
+                        "<p style='color: #333;'>Ciao " + user.getName() + " " + user.getSurname() + ",</p>" +
+                        "<p style='color: #333;'>Grazie per aver effettuato un ordine su Abozzi Market SNC!</p>" +
+                        "<p style='color: #333;'>Ecco i dettagli del tuo ordine:</p>" +
+                        "<table style='width: 100%; margin: 20px 0; text-align: left;'>" +
+                        "<tr>" +
+                        "<th>Data Ordine:</th>" +
+                        "<td>" + order.getOrderDate().toLocalDate() + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        "<th>Stato Ordine:</th>" +
+                        "<td>" + order.getOrdersState() + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        "<th>Metodo di Pagamento:</th>" +
+                        "<td>PayPal - Totale: " + payment.getTotal() + "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        "<th>Indirizzo di Spedizione:</th>" +
+                        "<td>" + shipment.getCity() + " " + shipment.getAddress() + " " + shipment.getNumber() + "</td>" +
+                        "</tr>" +
+                        "</table>" +
+                        "<h2>Dettagli Prodotti:</h2>" +
+                        "<table style='width: 100%; margin: 20px 0; text-align: left; border-collapse: collapse;'>" +
+                        "<thead>" +
+                        "<tr>" +
+                        "<th style='border-bottom: 1px solid #ddd; padding: 8px;'>Prodotto</th>" +
+                        "<th style='border-bottom: 1px solid #ddd; padding: 8px;'>Quantità</th>" +
+                        "<th style='border-bottom: 1px solid #ddd; padding: 8px;'>Prezzo</th>" +
+                        "</tr>" +
+                        "</thead>" +
+                        "<tbody>";
+
+        for (OrderDetail detail : orderDetails) {
+            Product product = detail.getProduct();
+            content += "<tr>" +
+                    "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + product.getName() + "</td>" +
+                    "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + detail.getQuantity() + "</td>" +
+                    "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + product.getPrice() + "</td>" +
+                    "</tr>";
+        }
+        content += "</tbody>" +
+                "</table>" +
+                "<p style='color: #333;'>Ti invieremo una notifica appena il tuo ordine verrà spedito.</p>" +
+                "<p style='color: #333;'>Grazie ancora per aver scelto Abozzi Market SNC!</p>" +
+                "<small style='color: #333;'>Abozzi Market SNC</small>" +
+                "</div>" +
+                "</body>" +
+                "</html>";
+
         helper.setText(content, true);
         this.javaMailSender.send(msg);
     }
