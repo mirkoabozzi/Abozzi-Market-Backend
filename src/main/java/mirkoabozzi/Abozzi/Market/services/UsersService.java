@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -121,9 +122,13 @@ public class UsersService {
     }
 
     //RESET USER PASSWORD
-    public void resetUserPassword(UUID id, ResetUserPassword payload) {
-        User userFound = this.findById(id);
+    public void resetUserPassword(String token, ResetUserPassword payload) {
+        User userFound = this.usersRepository.findByResetPasswordToken(token).orElseThrow(() -> new BadRequestException("Token not valid or expired!"));
+        if (!userFound.getTokenDuration().isAfter(LocalDateTime.now()))
+            throw new BadRequestException("Token expired!");
         userFound.setPassword(this.passwordEncoder.encode(payload.password()));
+        userFound.setResetPasswordToken(null);
+        userFound.setTokenDuration(null);
         this.usersRepository.save(userFound);
     }
 

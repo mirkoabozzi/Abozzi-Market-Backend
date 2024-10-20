@@ -4,13 +4,16 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import mirkoabozzi.Abozzi.Market.dto.MailDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
+import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class MailService {
@@ -20,6 +23,8 @@ public class MailService {
     private String localHostRouter;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    private UsersRepository usersRepository;
 
     public void sendMail(MailDTO payload) throws MessagingException {
         MimeMessage msg = javaMailSender.createMimeMessage();
@@ -36,6 +41,11 @@ public class MailService {
     }
 
     public void resetPasswordRequest(User user) throws MessagingException {
+        String token = UUID.randomUUID().toString();
+        user.setResetPasswordToken(token);
+        user.setTokenDuration(LocalDateTime.now().plusMinutes(30));
+        this.usersRepository.save(user);
+
         MimeMessage msg = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
         helper.setTo(user.getEmail());
@@ -52,7 +62,8 @@ public class MailService {
                         "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
                         "<h1 style='color: #1a51bf;'>Password Reset</h1>" +
                         "<p style='color: #333;'>Hai richiesto il reset della password, clicca sul pulsante qui sotto per cambiare la tua password!</p>" +
-                        "<a href='" + localHostRouter + "/passwordReset/userId=" + user.getId() + "' " +
+                        "<p style='color: #333;'>Il link sarà valido per 30 minuti!</p>" +
+                        "<a href='" + localHostRouter + "/passwordReset/token=" + user.getResetPasswordToken() + "' " +
                         "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Cambia Password</a>" +
                         "<p style='color: #333;'>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p>" +
                         "<p style='color: #333;'>Abozzi Market SNC</p>" +

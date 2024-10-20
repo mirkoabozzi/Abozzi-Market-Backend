@@ -37,6 +37,9 @@ public class User implements UserDetails {
     private Role role;
     private String avatar;
 
+    private String resetPasswordToken;
+    private LocalDateTime tokenDuration;
+
     public User(String name, String surname, String email, String password, String phoneNumber, String avatar) {
         this.name = name;
         this.surname = surname;

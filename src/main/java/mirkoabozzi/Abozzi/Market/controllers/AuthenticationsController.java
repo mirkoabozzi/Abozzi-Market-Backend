@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,13 +59,13 @@ public class AuthenticationsController {
     }
 
     //PUT RESET PASSWORD
-    @PutMapping("/reset/{id}")
-    public ResetPasswordRespDTO resetPassword(@PathVariable UUID id, @RequestBody @Validated ResetUserPassword payload, BindingResult validation) {
+    @PutMapping("/reset/{token}")
+    public ResetPasswordRespDTO resetPassword(@PathVariable String token, @RequestBody @Validated ResetUserPassword payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            this.usersService.resetUserPassword(id, payload);
+            this.usersService.resetUserPassword(token, payload);
         }
         return new ResetPasswordRespDTO("Password has been reset");
     }
