@@ -96,9 +96,11 @@ public class OrdersService {
     }
 
     //UPDATE ORDER STATE
-    public Order updateOrderState(OrdersStateDTO payload) {
+    public Order updateOrderState(OrdersStateDTO payload) throws MessagingException {
         Order orderFound = this.findById(UUID.fromString(payload.order()));
         orderFound.setOrdersState(OrdersState.valueOf(payload.state()));
-        return this.ordersRepository.save(orderFound);
+        Order orderSaved = this.ordersRepository.save(orderFound);
+        this.mailService.orderStatusEmail(orderFound);
+        return orderSaved;
     }
 }

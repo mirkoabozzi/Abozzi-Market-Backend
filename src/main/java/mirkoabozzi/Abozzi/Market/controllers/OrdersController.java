@@ -82,7 +82,7 @@ public class OrdersController {
     //UPDATE ORDER STATE
     @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Order updateOrder(@RequestBody @Validated OrdersStateDTO payload, BindingResult validation) {
+    public Order updateOrder(@RequestBody @Validated OrdersStateDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);

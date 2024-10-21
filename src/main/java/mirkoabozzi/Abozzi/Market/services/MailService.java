@@ -174,4 +174,39 @@ public class MailService {
         helper.setText(content, true);
         this.javaMailSender.send(msg);
     }
+
+    public void orderStatusEmail(Order order) throws MessagingException {
+        MimeMessage msg = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        User user = order.getUser();
+        helper.setTo(user.getEmail());
+        helper.setSubject("Aggiornamento Stato Ordine #" + order.getId());
+
+        String content =
+                "<!DOCTYPE html>" +
+                        "<html lang='it'>" +
+                        "<head>" +
+                        "<meta charset='UTF-8'>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "<title>Aggiornamento Stato Ordine</title>" +
+                        "</head>" +
+                        "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;'>" +
+                        "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+                        "<h1 style='color: #1a51bf;'>Aggiornamento del tuo ordine #" + order.getId() + "</h1>" +
+                        "<p style='color: #333;'>Ciao " + user.getName() + " " + user.getSurname() + ",</p>" +
+                        "<p style='color: #333;'>Ti informiamo che lo stato del tuo ordine è cambiato.</p>" +
+                        "<p style='color: #333;'>Nuovo stato: <strong>" + order.getOrdersState() + "</strong></p>" +
+                        "<p style='color: #333;'>Continua a monitorare lo stato del tuo ordine direttamente sul tuo account.</p>" +
+                        "<p style='color: #333;'>Grazie per aver scelto Abozzi Market!</p>" +
+                        "<a href='" + localHostRouter + "/profile/orders/details/" + order.getId() + "' " +
+                        "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Visualizza il tuo ordine</a>" +
+                        "<p style='color: #333; margin-top: 20px;'>Se hai domande, non esitare a contattarci.</p>" +
+                        "<small style='color: #333;'>Abozzi Market SNC</small>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>";
+
+        helper.setText(content, true);
+        this.javaMailSender.send(msg);
+    }
 }
