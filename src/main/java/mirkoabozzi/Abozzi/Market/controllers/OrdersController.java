@@ -72,8 +72,8 @@ public class OrdersController {
         this.ordersService.deleteMyOrder(id, userAuthenticated.getId());
     }
 
-    //GET MYORDER BY ID
-    @GetMapping("/{id}")
+    //GET MY ORDER BY ID
+    @GetMapping("/me/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Order getMyOrderById(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
         return this.ordersService.findMyOrderById(id, userAuthenticated.getId());
@@ -89,5 +89,22 @@ public class OrdersController {
         } else {
             return this.ordersService.updateOrderState(payload);
         }
+    }
+
+    // GET BY USER EMAIL
+    @GetMapping("/user")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Order> getOrderByUserEmail(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "20") int size,
+                                           @RequestParam(defaultValue = "orderDate") String sortBy,
+                                           @RequestParam String email) {
+        return this.ordersService.findByUserEmail(page, size, sortBy, email);
+    }
+
+    //GET ORDER BY ID
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Order getOrderById(@PathVariable UUID id) {
+        return this.ordersService.findById(id);
     }
 }

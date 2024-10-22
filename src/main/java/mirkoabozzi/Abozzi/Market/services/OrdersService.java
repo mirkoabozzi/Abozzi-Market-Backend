@@ -103,4 +103,10 @@ public class OrdersService {
         this.mailService.orderStatusEmail(orderFound);
         return orderSaved;
     }
+
+    //FIND BY USER EMAIL
+    public Page<Order> findByUserEmail(int pages, int size, String sortBy, String email) {
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending());
+        return this.ordersRepository.findByUserEmail(pageable, email);
+    }
 }
