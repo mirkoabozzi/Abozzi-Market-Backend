@@ -92,7 +92,7 @@ public class MailService {
                         "<h1 style='color: #1a51bf;'>Conferma Ordine</h1>" +
                         "<p style='color: #333;'>Ciao " + user.getName() + " " + user.getSurname() + ",</p>" +
                         "<p style='color: #333;'>Grazie per aver effettuato un ordine su Abozzi Market SNC!</p>" +
-                        "<p style='color: #333;'>Ecco i dettagli del tuo ordine:</p>" +
+                        "<p style='color: #333;'>Ecco i dettagli del tuo ordine: " + order.getId() + " </p>" +
                         "<table style='width: 100%; margin: 20px 0; text-align: left;'>" +
                         "<tr>" +
                         "<th>Data Ordine:</th>" +
@@ -192,7 +192,7 @@ public class MailService {
                         "</head>" +
                         "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;'>" +
                         "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
-                        "<h1 style='color: #1a51bf;'>Aggiornamento del tuo ordine #" + order.getId() + "</h1>" +
+                        "<h1 style='color: #1a51bf;'>Aggiornamento del tuo ordine: " + order.getId() + "</h1>" +
                         "<p style='color: #333;'>Ciao " + user.getName() + " " + user.getSurname() + ",</p>" +
                         "<p style='color: #333;'>Ti informiamo che lo stato del tuo ordine è cambiato.</p>" +
                         "<p style='color: #333;'>Nuovo stato: <strong>" + order.getOrdersState() + "</strong></p>" +

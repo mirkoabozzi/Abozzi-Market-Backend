@@ -23,8 +23,6 @@ import java.util.Arrays;
 public class SecurityConfig {
     @Value("${cors.config.local.host}")
     private String localHost;
-    @Value("${cors.config.local.host.smartphone}")
-    private String localHostSmartphone;
     @Value("${cors.config.local.host.router}")
     private String localHostRouter;
 
@@ -47,7 +45,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(localHost, localHostSmartphone, localHostRouter));
+        configuration.setAllowedOrigins(Arrays.asList(localHost, localHostRouter));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 

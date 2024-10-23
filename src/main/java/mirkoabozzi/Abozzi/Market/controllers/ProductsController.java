@@ -42,7 +42,7 @@ public class ProductsController {
     @GetMapping("/all")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "20") int size,
+                                        @RequestParam(defaultValue = "24") int size,
                                         @RequestParam(defaultValue = "lastUpdate") String sortBy) {
         return this.productsService.getAllProducts(page, size, sortBy);
     }
@@ -85,7 +85,7 @@ public class ProductsController {
     @GetMapping("/name")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByProductsContainsName(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "24") int size,
                                                     @RequestParam(defaultValue = "lastUpdate") String sortBy,
                                                     @RequestParam String name) {
         return this.productsService.findByProductsContainsName(page, size, sortBy, name);
@@ -95,7 +95,7 @@ public class ProductsController {
     @GetMapping("/category")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "24") int size,
                                                     @RequestParam(defaultValue = "name") String sortBy,
                                                     @RequestParam String name) {
         return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
@@ -105,7 +105,7 @@ public class ProductsController {
     @GetMapping("/price")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByPriceRange(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "20") int size,
+                                          @RequestParam(defaultValue = "24") int size,
                                           @RequestParam(defaultValue = "lastUpdate") String sortBy,
                                           @RequestParam int min,
                                           @RequestParam int max) {
@@ -116,7 +116,7 @@ public class ProductsController {
     @GetMapping("/discount")
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findByDiscountStatus(@RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "20") int size,
+                                              @RequestParam(defaultValue = "24") int size,
                                               @RequestParam(defaultValue = "lastUpdate") String sortBy
     ) {
         return this.productsService.findByDiscountStatus(page, size, sortBy);
