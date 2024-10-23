@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -39,6 +40,22 @@ public class User implements UserDetails {
 
     private String resetPasswordToken;
     private LocalDateTime tokenDuration;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Shipment> shipments;
 
     public User(String name, String surname, String email, String password, String phoneNumber, String avatar) {
         this.name = name;

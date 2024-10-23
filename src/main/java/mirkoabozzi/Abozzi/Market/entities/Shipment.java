@@ -1,12 +1,14 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,6 +29,10 @@ public class Shipment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "shipment")
+    @JsonIgnore
+    private List<Order> orders;
 
     public Shipment(String address, int number, String city, String zipCode, User user) {
         this.address = address;
