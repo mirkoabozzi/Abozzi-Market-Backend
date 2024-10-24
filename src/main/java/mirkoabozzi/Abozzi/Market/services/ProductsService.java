@@ -89,25 +89,25 @@ public class ProductsService {
 
     //FIND BY PRODUCT CONTAINS NAME
     public Page<Product> findByProductsContainsName(int pages, int size, String sortBy, String name) {
-        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending().descending());
         return this.productsRepository.findByNameContainingIgnoreCase(pageable, name);
     }
 
     //FIND PRODUCT BY CATEGORY
     public Page<Product> findProductsByCategoryContainingName(int pages, int size, String sortBy, String name) {
-        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending());
         return this.productsRepository.findProductsByCategoryNameContaining(pageable, name);
     }
 
     //FIND PRODUCT BY PRICE RANGE
     public Page<Product> findByPriceRange(int pages, int size, String sortBy, int min, int max) {
-        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending());
         return this.productsRepository.findByPriceRange(pageable, min, max);
     }
 
     //FIND PRODUCT ON DISCOUNT
     public Page<Product> findByDiscountStatus(int pages, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending());
         return this.productsRepository.findByDiscountStatus(pageable);
     }
 

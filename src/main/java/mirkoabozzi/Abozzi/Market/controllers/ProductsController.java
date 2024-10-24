@@ -96,7 +96,7 @@ public class ProductsController {
 //    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Page<Product> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "24") int size,
-                                                    @RequestParam(defaultValue = "name") String sortBy,
+                                                    @RequestParam(defaultValue = "lastUpdate") String sortBy,
                                                     @RequestParam String name) {
         return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
     }

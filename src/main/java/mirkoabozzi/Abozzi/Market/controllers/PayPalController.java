@@ -6,17 +6,17 @@ import com.paypal.base.rest.PayPalRESTException;
 import lombok.NoArgsConstructor;
 import mirkoabozzi.Abozzi.Market.dto.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.dto.PayPalExecuteDTO;
+import mirkoabozzi.Abozzi.Market.entities.PayPal;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.PayPalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -58,5 +58,13 @@ public class PayPalController {
             }
             return "redirect:/" + payload.failedUrl();
         }
+    }
+
+    //REPORT BY DATE
+    @GetMapping("/report")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<PayPal> findByDate(@RequestParam LocalDateTime startDate,
+                                   @RequestParam LocalDateTime endDate) {
+        return this.payPalService.findByPaymentDate(startDate, endDate);
     }
 }
