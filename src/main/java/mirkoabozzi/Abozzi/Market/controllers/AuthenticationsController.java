@@ -69,4 +69,11 @@ public class AuthenticationsController {
         }
         return new ResetPasswordRespDTO("Password has been reset");
     }
+
+    //PUT VERIFY USER
+    @PutMapping("/verify/{token}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void verifyUserEmail(@PathVariable String token) {
+        this.usersService.verifyUserEmail(token);
+    }
 }

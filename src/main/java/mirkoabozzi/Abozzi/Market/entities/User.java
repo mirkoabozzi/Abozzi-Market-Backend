@@ -22,7 +22,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonIgnoreProperties({"password", "authorities", "enabled", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "username", "resetPasswordToken", "tokenDuration"})
+@JsonIgnoreProperties({"password", "authorities", "enabled", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "username", "resetPasswordToken", "tokenDuration", "verificationToken"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -37,7 +37,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     private String avatar;
-
+    private Boolean isVerified;
+    private String verificationToken;
     private String resetPasswordToken;
     private LocalDateTime tokenDuration;
 
@@ -66,6 +67,7 @@ public class User implements UserDetails {
         this.registrationDate = LocalDateTime.now();
         this.role = Role.USER;
         this.avatar = avatar;
+        this.isVerified = false;
     }
 
     @Override

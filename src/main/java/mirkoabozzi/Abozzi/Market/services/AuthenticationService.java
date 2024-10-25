@@ -19,7 +19,7 @@ public class AuthenticationService {
 
     public String checkCredentialAndGenerateToken(UsersLoginDTO payload) {
         User userFound = this.usersService.findByEmail(payload.email());
-        if (passwordEncoder.matches(payload.password(), userFound.getPassword())) {
+        if (passwordEncoder.matches(payload.password(), userFound.getPassword()) && userFound.getIsVerified().equals(true)) {
             return this.jwtTools.generateToken(userFound);
         } else {
             throw new UnauthorizedException("Incorrect credentials");

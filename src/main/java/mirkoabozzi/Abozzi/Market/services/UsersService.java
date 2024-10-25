@@ -63,6 +63,8 @@ public class UsersService {
                 payload.email(),
                 this.passwordEncoder.encode(payload.password()),
                 payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
+        String token = UUID.randomUUID().toString();
+        newUser.setVerificationToken(token);
         User userSaved = this.usersRepository.save(newUser);
 //        this.mailgunSender.sendRegistrationEmail(newUser);
         this.mailService.userRegistrationEmail(userSaved);
@@ -138,6 +140,14 @@ public class UsersService {
         if (!this.passwordEncoder.matches(payload.oldPassword(), userFound.getPassword()))
             throw new BadRequestException("Wrong password");
         userFound.setPassword(this.passwordEncoder.encode(payload.newPassword()));
+        this.usersRepository.save(userFound);
+    }
+
+    //VERIFY USER EMAIL
+    public void verifyUserEmail(String verificationToken) {
+        User userFound = this.usersRepository.findByVerificationToken(String.valueOf(verificationToken)).orElseThrow(() -> new BadRequestException("User not found!"));
+        userFound.setIsVerified(true);
+        userFound.setVerificationToken(null);
         this.usersRepository.save(userFound);
     }
 }

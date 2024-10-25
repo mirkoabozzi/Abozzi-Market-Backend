@@ -29,7 +29,7 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "20") int size,
-                                  @RequestParam(defaultValue = "name") String sortBy) {
+                                  @RequestParam(defaultValue = "surname") String sortBy) {
         return this.usersService.findAll(page, size, sortBy);
     }
 
