@@ -37,7 +37,7 @@ public class ShipmentsController {
     //GET MY ADDRESS
     @GetMapping("/me")
     public Page<Shipment> getMyShipment(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "20") int size,
                                         @RequestParam(defaultValue = "city") String sortBy,
                                         @AuthenticationPrincipal User authenticatedUser
     ) {

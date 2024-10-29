@@ -95,7 +95,7 @@ public class OrdersController {
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Order> getOrderByUserEmail(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "20") int size,
+                                           @RequestParam(defaultValue = "10") int size,
                                            @RequestParam(defaultValue = "orderDate") String sortBy,
                                            @RequestParam String email) {
         return this.ordersService.findByUserEmail(page, size, sortBy, email);

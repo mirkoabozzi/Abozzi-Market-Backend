@@ -37,7 +37,7 @@ public class WishlistsController {
     //GET MY WISHLIST
     @GetMapping("/me")
     public Page<Wishlist> getMyWishlist(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "24") int size,
                                         @RequestParam(defaultValue = "product") String sortBy,
                                         @AuthenticationPrincipal User userAuthenticated
     ) {

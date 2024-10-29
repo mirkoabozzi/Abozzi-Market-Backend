@@ -38,7 +38,7 @@ public class ReviewsController {
     //GET MY REVIEWS
     @GetMapping("/me")
     public Page<Review> getMyReviews(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
+                                     @RequestParam(defaultValue = "20") int size,
                                      @RequestParam(defaultValue = "product") String sortBy,
                                      @AuthenticationPrincipal User userAuthenticated
     ) {
@@ -48,7 +48,7 @@ public class ReviewsController {
     //GET REVIEWS BY PRODUCT ID
     @GetMapping("/product/{id}")
     public Page<Review> getReviewsByProductId(@RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "10") int size,
+                                              @RequestParam(defaultValue = "20") int size,
                                               @RequestParam(defaultValue = "publishDate") String sortBy,
                                               @PathVariable UUID id
     ) {
