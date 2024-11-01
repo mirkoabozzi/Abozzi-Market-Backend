@@ -9,7 +9,7 @@ public record OrdersDTO(
         String user,
         @NotEmpty(message = "Payment is required. ")
         String payment,
-        @NotEmpty(message = "Shipment is required. ")
+//        @NotEmpty(message = "Shipment is required. ")
         String shipment,
         @NotEmpty(message = "Order detail list is required. ")
         List<OrderDetailsDTO> orderDetails

@@ -42,12 +42,11 @@ public class Order {
     private List<OrderDetail> orderDetailList;
 
 
-    public Order(LocalDateTime orderDate, OrdersState ordersState, User user, PayPal payment, Shipment shipment) {
+    public Order(LocalDateTime orderDate, OrdersState ordersState, User user, PayPal payment) {
         this.orderDate = orderDate;
         this.ordersState = ordersState;
         this.user = user;
         this.payment = payment;
-        this.shipment = shipment;
         this.orderDetailList = new ArrayList<>();
     }
 }

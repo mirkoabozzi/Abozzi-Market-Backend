@@ -44,8 +44,12 @@ public class OrdersService {
     public Order saveOrder(OrdersDTO payload) throws MessagingException {
         PayPal paymentFound = this.payPalService.findById(payload.payment());
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
-        Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
-        Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound, null, shipmentFound);
+        Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound, null);
+        Shipment shipmentFound = null;
+        if (payload.shipment() != null) {
+            shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
+            newOrder.setShipment(shipmentFound);
+        }
         List<OrderDetail> orderDetails = payload.orderDetails().stream().map(detailDTO -> {
             Product product = this.productsService.findById(UUID.fromString(detailDTO.product()));
             if (product.getQuantityAvailable() < detailDTO.quantity())

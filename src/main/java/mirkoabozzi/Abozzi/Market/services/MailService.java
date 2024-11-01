@@ -79,6 +79,11 @@ public class MailService {
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Riepilogo ordine");
+
+        String shippingInfo = (shipment != null)
+                ? shipment.getCity() + " " + shipment.getAddress() + " " + shipment.getNumber()
+                : "Ritiro in negozio";
+
         String content =
                 "<!DOCTYPE html>" +
                         "<html lang='it'>" +
@@ -108,7 +113,7 @@ public class MailService {
                         "</tr>" +
                         "<tr>" +
                         "<th>Indirizzo di Spedizione:</th>" +
-                        "<td>" + shipment.getCity() + " " + shipment.getAddress() + " " + shipment.getNumber() + "</td>" +
+                        "<td>" + shippingInfo + "</td>" +
                         "</tr>" +
                         "</table>" +
                         "<h2>Dettagli Prodotti:</h2>" +
@@ -182,6 +187,18 @@ public class MailService {
         helper.setTo(user.getEmail());
         helper.setSubject("Aggiornamento Stato Ordine #" + order.getId());
 
+        String orderStatus;
+        switch (order.getOrdersState()) {
+            case PROCESSING -> orderStatus = "In lavorazione";
+            case CANCELLED -> orderStatus = "Cancellato";
+            case SHIPPED -> orderStatus = "Spedito";
+            case IN_TRANSIT -> orderStatus = "In transito";
+            case ON_DELIVERY -> orderStatus = "In consegna";
+            case DELIVERED -> orderStatus = "Consegnato";
+            case READY_TO_PICKUP -> orderStatus = "Pronto per il ritiro";
+            default -> orderStatus = String.valueOf(order.getOrdersState());
+        }
+
         String content =
                 "<!DOCTYPE html>" +
                         "<html lang='it'>" +
@@ -195,7 +212,7 @@ public class MailService {
                         "<h1 style='color: #1a51bf;'>Aggiornamento del tuo ordine: " + order.getId() + "</h1>" +
                         "<p style='color: #333;'>Ciao " + user.getName() + " " + user.getSurname() + ",</p>" +
                         "<p style='color: #333;'>Ti informiamo che lo stato del tuo ordine è cambiato.</p>" +
-                        "<p style='color: #333;'>Nuovo stato: <strong>" + order.getOrdersState() + "</strong></p>" +
+                        "<p style='color: #333;'>Nuovo stato: <strong>" + orderStatus + "</strong></p>" +
                         "<p style='color: #333;'>Continua a monitorare lo stato del tuo ordine direttamente sul tuo account.</p>" +
                         "<p style='color: #333;'>Grazie per aver scelto Abozzi Market!</p>" +
                         "<a href='" + localHostRouter + "/profile/orders/details/" + order.getId() + "' " +
