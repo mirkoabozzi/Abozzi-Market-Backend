@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.exceptions;
 
 import com.paypal.base.rest.PayPalRESTException;
+import com.stripe.exception.StripeException;
 import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.ErrorsDTO;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -63,6 +64,12 @@ public class ExceptionsHandler {
     @ExceptionHandler(PayPalRESTException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handlePayPalRESTException(PayPalRESTException ex) {
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(StripeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handleStripeException(StripeException ex) {
         return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
     }
 
