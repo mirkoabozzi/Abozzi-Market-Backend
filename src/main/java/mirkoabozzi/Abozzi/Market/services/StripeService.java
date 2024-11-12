@@ -4,12 +4,20 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
+import mirkoabozzi.Abozzi.Market.entities.Stripe;
+import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
+import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
+import mirkoabozzi.Abozzi.Market.repositories.StripeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class StripeService {
+    @Autowired
+    private StripeRepository stripeRepository;
 
     public String createPaymentSession(StripeDTO payload) throws StripeException {
         SessionCreateParams.Builder sessionCreateParamsBuilder = SessionCreateParams.builder()
@@ -31,4 +39,28 @@ public class StripeService {
         Session session = Session.create(sessionCreateParamsBuilder.build());
         return session.getUrl();
     }
+
+    public Stripe findBySessionId(String sessionId) {
+        return this.stripeRepository.findBySessionId(sessionId).orElseThrow(() -> new NotFoundException("Payment whit ID " + sessionId + " not found"));
+    }
+
+    public String verifyStripePayment(String sessionId) throws StripeException {
+
+        if (this.stripeRepository.existsBySessionId(sessionId))
+            throw new BadRequestException("Payment with id " + sessionId + " already on DB");
+
+        Session session = Session.retrieve(sessionId);
+        if (session.getStatus().equals("complete")) {
+            Stripe payment = new Stripe();
+            payment.setSessionId(session.getId());
+            payment.setPaymentIntentId(session.getPaymentIntent());
+            payment.setAmount(session.getAmountTotal() / 100.0);
+            payment.setCurrency(session.getCurrency());
+            payment.setStatus("COMPLETED");
+            payment.setPaymentDate(LocalDateTime.now());
+            this.stripeRepository.save(payment);
+        }
+        return session.getStatus();
+    }
+
 }

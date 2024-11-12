@@ -3,15 +3,13 @@ package mirkoabozzi.Abozzi.Market.controllers;
 import com.stripe.exception.StripeException;
 import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
+import mirkoabozzi.Abozzi.Market.repositories.StripeRepository;
 import mirkoabozzi.Abozzi.Market.services.StripeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -20,6 +18,8 @@ import java.util.stream.Collectors;
 public class StripeController {
     @Autowired
     private StripeService stripeService;
+    @Autowired
+    private StripeRepository stripeRepository;
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
@@ -30,5 +30,12 @@ public class StripeController {
         } else {
             return this.stripeService.createPaymentSession(payload);
         }
+    }
+
+    // GET VERIFY AND SAVE PAYMENT
+    @GetMapping("/verify")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public String verifyStripePayment(@RequestParam String sessionId) throws StripeException {
+        return this.stripeService.verifyStripePayment(sessionId);
     }
 }
