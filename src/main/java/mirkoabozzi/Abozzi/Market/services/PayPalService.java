@@ -73,8 +73,8 @@ public class PayPalService {
         return executedPayment;
     }
 
-    public PayPal findById(String id) {
-        return this.payPalRepository.findByPaymentId(id).orElseThrow(() -> new NotFoundException("Payment whit ID " + id + " not found"));
+    public PayPal findByPaymentId(String id) {
+        return this.payPalRepository.findByPaymentId(id).orElseThrow(() -> new NotFoundException("Pay Pal payment whit ID " + id + " not found"));
     }
 
     //FIND BY DATE

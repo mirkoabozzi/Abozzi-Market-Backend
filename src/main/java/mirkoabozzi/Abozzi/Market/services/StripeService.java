@@ -41,7 +41,7 @@ public class StripeService {
     }
 
     public Stripe findBySessionId(String sessionId) {
-        return this.stripeRepository.findBySessionId(sessionId).orElseThrow(() -> new NotFoundException("Payment whit ID " + sessionId + " not found"));
+        return this.stripeRepository.findBySessionId(sessionId).orElseThrow(() -> new NotFoundException("Stripe payment whit ID " + sessionId + " not found"));
     }
 
     public String verifyStripePayment(String sessionId) throws StripeException {
@@ -54,7 +54,7 @@ public class StripeService {
             Stripe payment = new Stripe();
             payment.setSessionId(session.getId());
             payment.setPaymentIntentId(session.getPaymentIntent());
-            payment.setAmount(session.getAmountTotal() / 100.0);
+            payment.setTotal(session.getAmountTotal() / 100.0);
             payment.setCurrency(session.getCurrency());
             payment.setStatus("COMPLETED");
             payment.setPaymentDate(LocalDateTime.now());
