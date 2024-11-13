@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class StripeService {
     @Autowired
     private StripeRepository stripeRepository;
 
+    //PAYMENT SESSION
     public String createPaymentSession(StripeDTO payload) throws StripeException {
         SessionCreateParams.Builder sessionCreateParamsBuilder = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
@@ -40,10 +42,12 @@ public class StripeService {
         return session.getUrl();
     }
 
+    //FIND BY SESSION ID
     public Stripe findBySessionId(String sessionId) {
         return this.stripeRepository.findBySessionId(sessionId).orElseThrow(() -> new NotFoundException("Stripe payment whit ID " + sessionId + " not found"));
     }
 
+    //VERIFY AND SEVE STRIPE PAYMENT
     public String verifyStripePayment(String sessionId) throws StripeException {
 
         if (this.stripeRepository.existsBySessionId(sessionId))
@@ -63,4 +67,8 @@ public class StripeService {
         return session.getStatus();
     }
 
+    //FIND PAYMENT BY DATE
+    public List<Stripe> findByPaymentDate(LocalDateTime startDate, LocalDateTime endDate) {
+        return this.stripeRepository.findByPaymentDateBetween(startDate, endDate);
+    }
 }

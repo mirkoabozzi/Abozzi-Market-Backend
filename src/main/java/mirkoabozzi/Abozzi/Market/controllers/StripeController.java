@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import com.stripe.exception.StripeException;
 import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
+import mirkoabozzi.Abozzi.Market.entities.Stripe;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.repositories.StripeRepository;
 import mirkoabozzi.Abozzi.Market.services.StripeService;
@@ -11,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,6 +24,7 @@ public class StripeController {
     @Autowired
     private StripeRepository stripeRepository;
 
+    //POST CREATE STRIPE SESSION
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public String createSession(@RequestBody @Validated StripeDTO payload, BindingResult validation) throws StripeException {
@@ -37,5 +41,13 @@ public class StripeController {
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public String verifyStripePayment(@RequestParam String sessionId) throws StripeException {
         return this.stripeService.verifyStripePayment(sessionId);
+    }
+
+    //REPORT BY DATE
+    @GetMapping("/report")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Stripe> findByDate(@RequestParam LocalDateTime startDate,
+                                   @RequestParam LocalDateTime endDate) {
+        return this.stripeService.findByPaymentDate(startDate, endDate);
     }
 }

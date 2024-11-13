@@ -23,6 +23,7 @@ public class PayPalService {
     @Autowired
     private PayPalRepository payPalRepository;
 
+    // CREATE PAYPAL PAYMENT
     public Payment createPayment(PayPalDTO payload) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(payload.currency());
@@ -51,6 +52,7 @@ public class PayPalService {
         return payment.create(apiContext);
     }
 
+    //EXECUTE PAYPAL PAYMENT
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
@@ -73,6 +75,7 @@ public class PayPalService {
         return executedPayment;
     }
 
+    //FIND BY ID
     public PayPal findByPaymentId(String id) {
         return this.payPalRepository.findByPaymentId(id).orElseThrow(() -> new NotFoundException("Pay Pal payment whit ID " + id + " not found"));
     }

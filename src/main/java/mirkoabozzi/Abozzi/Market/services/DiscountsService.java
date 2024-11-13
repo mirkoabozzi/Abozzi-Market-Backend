@@ -33,6 +33,7 @@ public class DiscountsService {
         return this.discountsRepository.save(newDiscount);
     }
 
+    //FIND BY ID
     public Discount findById(UUID id) {
         return this.discountsRepository.findById(id).orElseThrow(() -> new NotFoundException("Discount whit ID " + id + " not found"));
     }

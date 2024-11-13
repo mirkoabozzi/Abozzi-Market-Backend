@@ -20,6 +20,7 @@ public class MailController {
     @Autowired
     private MailService mailService;
 
+    //POST SEND EMAIL
     @PostMapping
     public void sendMail(@RequestBody @Validated MailDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {

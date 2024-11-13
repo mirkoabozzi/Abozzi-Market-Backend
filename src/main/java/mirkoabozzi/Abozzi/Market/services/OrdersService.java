@@ -75,6 +75,8 @@ public class OrdersService {
         return savedOrder;
     }
 
+
+    //FIND BY ID
     public Order findById(UUID id) {
         return this.ordersRepository.findById(id).orElseThrow(() -> new NotFoundException("Order whit ID " + id + " not found"));
     }

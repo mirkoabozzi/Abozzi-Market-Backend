@@ -28,6 +28,7 @@ public class ShipmentsService {
         return this.shipmentsRepository.save(newShipment);
     }
 
+    //FIND BY ID
     public Shipment findById(UUID id) {
         return this.shipmentsRepository.findById(id).orElseThrow(() -> new NotFoundException("Shipment whit ID " + id + " not found"));
     }
