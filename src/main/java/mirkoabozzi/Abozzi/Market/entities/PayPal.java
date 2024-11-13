@@ -12,12 +12,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PayPal extends Payment {
-    private String description;
     private String payerId;
     private String paymentId;
 
-    public PayPal(String description, String payerId, String paymentId) {
-        this.description = description;
+    public PayPal(String payerId, String paymentId) {
         this.payerId = payerId;
         this.paymentId = paymentId;
     }

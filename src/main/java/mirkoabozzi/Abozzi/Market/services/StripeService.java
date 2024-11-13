@@ -62,6 +62,7 @@ public class StripeService {
             payment.setCurrency(session.getCurrency());
             payment.setStatus("COMPLETED");
             payment.setPaymentDate(LocalDateTime.now());
+            payment.setDescription("Stripe");
             this.stripeRepository.save(payment);
         }
         return session.getStatus();

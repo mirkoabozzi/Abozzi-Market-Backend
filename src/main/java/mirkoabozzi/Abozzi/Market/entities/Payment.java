@@ -21,4 +21,5 @@ public abstract class Payment {
     private LocalDateTime paymentDate;
     private Double total;
     private String status;
+    private String description;
 }
