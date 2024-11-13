@@ -38,18 +38,28 @@ public class OrdersService {
     @Autowired
     private PayPalService payPalService;
     @Autowired
+    private StripeService stripeService;
+    @Autowired
     private MailService mailService;
 
     //POST SAVE ORDER
     public Order saveOrder(OrdersDTO payload) throws MessagingException {
-        PayPal paymentFound = this.payPalService.findById(payload.payment());
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
-        Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound, null);
-        Shipment shipmentFound = null;
+        Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound);
+
+        if (payload.payment().startsWith("PAYID-")) {
+            PayPal paypalPaymentFound = this.payPalService.findByPaymentId(payload.payment());
+            newOrder.setPayment(paypalPaymentFound);
+        } else if (payload.payment().startsWith("cs")) {
+            Stripe stripePaymentFound = this.stripeService.findBySessionId(payload.payment());
+            newOrder.setPayment(stripePaymentFound);
+        }
+
         if (payload.shipment() != null) {
-            shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
+            Shipment shipmentFound = this.shipmentsService.findById(UUID.fromString(payload.shipment()));
             newOrder.setShipment(shipmentFound);
         }
+
         List<OrderDetail> orderDetails = payload.orderDetails().stream().map(detailDTO -> {
             Product product = this.productsService.findById(UUID.fromString(detailDTO.product()));
             if (product.getQuantityAvailable() < detailDTO.quantity())
@@ -57,11 +67,11 @@ public class OrdersService {
             product.setQuantityAvailable(product.getQuantityAvailable() - detailDTO.quantity());
             return new OrderDetail(detailDTO.quantity(), newOrder, product);
         }).toList();
-        newOrder.setPayment(paymentFound);
+
         Order savedOrder = this.ordersRepository.save(newOrder);
         this.orderDetailsService.saveAllOrderDetails(orderDetails);
 //        this.mailgunSender.sendOrderCreatedEmail(userFound);
-        this.mailService.orderConfirmationEmail(userFound, newOrder, orderDetails, paymentFound, shipmentFound);
+        this.mailService.orderConfirmationEmail(userFound, newOrder, orderDetails);
         return savedOrder;
     }
 

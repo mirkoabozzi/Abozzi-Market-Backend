@@ -3,7 +3,10 @@ package mirkoabozzi.Abozzi.Market.services;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import mirkoabozzi.Abozzi.Market.dto.MailDTO;
-import mirkoabozzi.Abozzi.Market.entities.*;
+import mirkoabozzi.Abozzi.Market.entities.Order;
+import mirkoabozzi.Abozzi.Market.entities.OrderDetail;
+import mirkoabozzi.Abozzi.Market.entities.Product;
+import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,14 +77,14 @@ public class MailService {
         this.javaMailSender.send(msg);
     }
 
-    public void orderConfirmationEmail(User user, Order order, List<OrderDetail> orderDetails, PayPal payment, Shipment shipment) throws MessagingException {
+    public void orderConfirmationEmail(User user, Order order, List<OrderDetail> orderDetails) throws MessagingException {
         MimeMessage msg = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
         helper.setTo(user.getEmail());
         helper.setSubject("Riepilogo ordine");
 
-        String shippingInfo = (shipment != null)
-                ? shipment.getCity() + " " + shipment.getAddress() + " " + shipment.getNumber()
+        String shippingInfo = (order.getShipment() != null)
+                ? order.getShipment().getCity() + " " + order.getShipment().getAddress() + " " + order.getShipment().getNumber()
                 : "Ritiro in negozio";
 
         String content =
@@ -109,7 +112,7 @@ public class MailService {
                         "</tr>" +
                         "<tr>" +
                         "<th>Metodo di Pagamento:</th>" +
-                        "<td>PayPal - Totale: " + payment.getTotal() + "</td>" +
+                        "<td>" + order.getPayment().getClass().getSimpleName() + " - Totale: " + order.getPayment().getTotal() + "</td>" +
                         "</tr>" +
                         "<tr>" +
                         "<th>Indirizzo di Spedizione:</th>" +
