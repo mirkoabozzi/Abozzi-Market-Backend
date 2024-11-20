@@ -55,14 +55,16 @@ public class StripeService {
 
         Session session = Session.retrieve(sessionId);
         if (session.getStatus().equals("complete")) {
-            Stripe payment = new Stripe();
-            payment.setSessionId(session.getId());
-            payment.setPaymentIntentId(session.getPaymentIntent());
-            payment.setTotal(session.getAmountTotal() / 100.0);
-            payment.setCurrency(session.getCurrency());
-            payment.setStatus("COMPLETED");
-            payment.setPaymentDate(LocalDateTime.now());
-            payment.setDescription("Stripe");
+
+            Stripe payment = new Stripe(
+                    LocalDateTime.now(),
+                    session.getAmountTotal() / 100.0,
+                    "COMPLETED",
+                    "Stripe",
+                    session.getId(),
+                    session.getPaymentIntent(),
+                    session.getCurrency());
+
             this.stripeRepository.save(payment);
         }
         return session.getStatus();

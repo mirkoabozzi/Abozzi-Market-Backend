@@ -62,13 +62,13 @@ public class PayPalService {
 
         Payment executedPayment = payment.execute(apiContext, paymentExecution);
 
-        PayPal newPayment = new PayPal();
-        newPayment.setPayerId(payerId);
-        newPayment.setPaymentDate(LocalDateTime.now());
-        newPayment.setTotal(Double.valueOf(executedPayment.getTransactions().getFirst().getAmount().getTotal()));
-        newPayment.setDescription(executedPayment.getTransactions().getFirst().getDescription());
-        newPayment.setPaymentId(executedPayment.getId());
-        newPayment.setStatus(executedPayment.getState());
+        PayPal newPayment = new PayPal(
+                LocalDateTime.now(),
+                Double.valueOf(executedPayment.getTransactions().getFirst().getAmount().getTotal()),
+                executedPayment.getState(),
+                executedPayment.getTransactions().getFirst().getDescription(),
+                payerId,
+                executedPayment.getId());
 
         this.payPalRepository.save(newPayment);
 
