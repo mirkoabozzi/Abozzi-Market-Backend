@@ -42,7 +42,7 @@ public class Product {
     private List<Discount> discountList;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    @JsonIgnore
+//    @JsonIgnore
     private List<Review> reviewList;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)

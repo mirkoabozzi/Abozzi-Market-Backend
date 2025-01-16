@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Review {
     private User user;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "product_id")
     private Product product;
 
