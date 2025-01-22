@@ -13,11 +13,13 @@ import java.util.Date;
 public class JWTTools {
     @Value("${jwt.secret}")
     private String secret;
+    @Value(("${jwt.expiration}"))
+    private Long expiration;
 
     public String generateToken(User user) {
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 20 * 7))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .subject(String.valueOf(user.getId()))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();

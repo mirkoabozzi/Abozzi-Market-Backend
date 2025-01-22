@@ -125,9 +125,9 @@ public class UsersService {
 
     //RESET USER PASSWORD
     public void resetUserPassword(String token, ResetUserPassword payload) {
-        User userFound = this.usersRepository.findByResetPasswordToken(token).orElseThrow(() -> new BadRequestException("Token not valid or expired!"));
+        User userFound = this.usersRepository.findByResetPasswordToken(token).orElseThrow(() -> new BadRequestException("Invalid password reset token!"));
         if (!userFound.getTokenDuration().isAfter(LocalDateTime.now()))
-            throw new BadRequestException("Token expired!");
+            throw new BadRequestException("Password reset token expired!");
         userFound.setPassword(this.passwordEncoder.encode(payload.password()));
         userFound.setResetPasswordToken(null);
         userFound.setTokenDuration(null);
