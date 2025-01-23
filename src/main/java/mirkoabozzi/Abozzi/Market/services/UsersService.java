@@ -11,7 +11,6 @@ import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import mirkoabozzi.Abozzi.Market.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +27,6 @@ import java.util.UUID;
 
 @Service
 public class UsersService {
-    @Value("${cors.config.local.host.router}")
-    private String localHostRouter;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired

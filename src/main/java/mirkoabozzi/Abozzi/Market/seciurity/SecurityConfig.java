@@ -23,10 +23,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Value("${cors.config.local.host}")
-    private String localHost;
-    @Value("${cors.config.local.host.router}")
-    private String localHostRouter;
+    @Value("${cors.config.front.end.url}")
+    private String frontEndUrl;
     @Autowired
     @Lazy
     private Oauth2LoginHandler oauth2LoginHandler;
@@ -51,7 +49,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(localHost, localHostRouter));
+        configuration.setAllowedOrigins(Arrays.asList(frontEndUrl));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 

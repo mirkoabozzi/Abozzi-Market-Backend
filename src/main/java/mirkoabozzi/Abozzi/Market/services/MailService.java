@@ -22,8 +22,8 @@ import java.util.UUID;
 public class MailService {
     @Value("${gmail.mail.from}")
     String from;
-    @Value("${cors.config.local.host.router}")
-    private String localHostRouter;
+    @Value("${cors.config.front.end.url}")
+    private String frontEndUrl;
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
@@ -66,7 +66,7 @@ public class MailService {
                         "<h1 style='color: #1a51bf;'>Password Reset</h1>" +
                         "<p style='color: #333;'>Hai richiesto il reset della password, clicca sul pulsante qui sotto per cambiare la tua password!</p>" +
                         "<p style='color: #333;'>Il link sarà valido per 30 minuti!</p>" +
-                        "<a href='" + localHostRouter + "/passwordReset/token=" + user.getResetPasswordToken() + "' " +
+                        "<a href='" + frontEndUrl + "/passwordReset/token=" + user.getResetPasswordToken() + "' " +
                         "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Cambia Password</a>" +
                         "<p style='color: #333;'>Se non sei stato tu a richiedere il cambio password, ignora questa email!</p>" +
                         "<p style='color: #333;'>Abozzi Market SNC</p>" +
@@ -171,7 +171,7 @@ public class MailService {
                         "<p style='color: #333;'>Grazie per esserti unito a Abozzi Market!</p>" +
                         "<p style='color: #333;'>Siamo lieti di averti con noi.</p>" +
                         "<p style='color: #333;'>Puoi ora esplorare i nostri prodotti e iniziare a fare acquisti.</p>" +
-                        "<a href='" + localHostRouter + "/verify/token=" + user.getVerificationToken() + "' " +
+                        "<a href='" + frontEndUrl + "/verify/token=" + user.getVerificationToken() + "' " +
                         "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Conferma email</a>" +
                         "<p style='color: #333; margin-top: 20px;'>Se hai domande o hai bisogno di assistenza, non esitare a contattarci.</p>" +
                         "<small style='color: #333;'>Abozzi Market SNC</small>" +
@@ -218,7 +218,7 @@ public class MailService {
                         "<p style='color: #333;'>Nuovo stato: <strong>" + orderStatus + "</strong></p>" +
                         "<p style='color: #333;'>Continua a monitorare lo stato del tuo ordine direttamente sul tuo account.</p>" +
                         "<p style='color: #333;'>Grazie per aver scelto Abozzi Market!</p>" +
-                        "<a href='" + localHostRouter + "/profile/orders/details/" + order.getId() + "' " +
+                        "<a href='" + frontEndUrl + "/profile/orders/details/" + order.getId() + "' " +
                         "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Visualizza il tuo ordine</a>" +
                         "<p style='color: #333; margin-top: 20px;'>Se hai domande, non esitare a contattarci.</p>" +
                         "<small style='color: #333;'>Abozzi Market SNC</small>" +

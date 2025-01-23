@@ -31,8 +31,8 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
     private JWTTools jwtTools;
     @Autowired
     private UsersRepository usersRepository;
-    @Value("${cors.config.local.host}")
-    private String localHost;
+    @Value("${cors.config.front.end.url}")
+    private String frontEndUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
@@ -79,7 +79,7 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
 
         String token = this.jwtTools.generateToken(userAuthenticated);
 
-        String targetUrl = UriComponentsBuilder.fromUriString(localHost + "/").queryParam("token", token).build().toUriString();
+        String targetUrl = UriComponentsBuilder.fromUriString(frontEndUrl + "/").queryParam("token", token).build().toUriString();
 
         this.setDefaultTargetUrl(targetUrl);
         super.onAuthenticationSuccess(request, response, authentication);
