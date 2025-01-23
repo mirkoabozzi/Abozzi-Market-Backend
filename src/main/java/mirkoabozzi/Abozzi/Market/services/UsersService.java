@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
 import mirkoabozzi.Abozzi.Market.enums.Role;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
@@ -59,7 +60,9 @@ public class UsersService {
                 payload.surname(),
                 payload.email(),
                 this.passwordEncoder.encode(payload.password()),
-                payload.phoneNumber(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
+                payload.phoneNumber(),
+                "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname(),
+                RegistrationMethod.FORM);
         String token = UUID.randomUUID().toString();
         newUser.setVerificationToken(token);
         User userSaved = this.usersRepository.save(newUser);
@@ -117,7 +120,9 @@ public class UsersService {
     //RESET USER PASSWORD REQUEST
     public void resetUserPasswordRequest(ResetUserPasswordRequest payload) throws MessagingException {
         User userFound = this.findByEmail(payload.email());
-        this.mailService.resetPasswordRequest(userFound);
+        if (userFound.getRegistrationMethod() == RegistrationMethod.FORM)
+            this.mailService.resetPasswordRequest(userFound);
+        else throw new BadRequestException("Account registered with Google");
     }
 
     //RESET USER PASSWORD

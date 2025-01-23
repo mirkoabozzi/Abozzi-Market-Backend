@@ -7,6 +7,7 @@ import mirkoabozzi.Abozzi.Market.entities.Order;
 import mirkoabozzi.Abozzi.Market.entities.OrderDetail;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -171,8 +172,8 @@ public class MailService {
                         "<p style='color: #333;'>Grazie per esserti unito a Abozzi Market!</p>" +
                         "<p style='color: #333;'>Siamo lieti di averti con noi.</p>" +
                         "<p style='color: #333;'>Puoi ora esplorare i nostri prodotti e iniziare a fare acquisti.</p>" +
-                        "<a href='" + frontEndUrl + "/verify/token=" + user.getVerificationToken() + "' " +
-                        "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Conferma email</a>" +
+                        (user.getRegistrationMethod() == RegistrationMethod.FORM ? "<a href='" + frontEndUrl + "/verify/token=" + user.getVerificationToken() + "' " +
+                                "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Conferma email</a>" : "") +
                         "<p style='color: #333; margin-top: 20px;'>Se hai domande o hai bisogno di assistenza, non esitare a contattarci.</p>" +
                         "<small style='color: #333;'>Abozzi Market SNC</small>" +
                         "</div>" +

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
 import mirkoabozzi.Abozzi.Market.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,6 +42,8 @@ public class User implements UserDetails {
     private String verificationToken;
     private String resetPasswordToken;
     private LocalDateTime tokenDuration;
+    @Enumerated(EnumType.STRING)
+    private RegistrationMethod registrationMethod;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -58,7 +61,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Shipment> shipments;
 
-    public User(String name, String surname, String email, String password, String phoneNumber, String avatar) {
+    public User(String name, String surname, String email, String password, String phoneNumber, String avatar, RegistrationMethod registrationMethod) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -68,6 +71,7 @@ public class User implements UserDetails {
         this.role = Role.USER;
         this.avatar = avatar;
         this.isVerified = false;
+        this.registrationMethod = registrationMethod;
     }
 
     @Override

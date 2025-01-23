@@ -1,11 +1,14 @@
 package mirkoabozzi.Abozzi.Market.seciurity;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mirkoabozzi.Abozzi.Market.entities.User;
+import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
 import mirkoabozzi.Abozzi.Market.enums.Role;
 import mirkoabozzi.Abozzi.Market.repositories.UsersRepository;
+import mirkoabozzi.Abozzi.Market.services.MailService;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +33,8 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
     @Autowired
     private JWTTools jwtTools;
     @Autowired
+    private MailService mailService;
+    @Autowired
     private UsersRepository usersRepository;
     @Value("${cors.config.front.end.url}")
     private String frontEndUrl;
@@ -37,6 +42,7 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
+
         if ("google".equals(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId())) {
             DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
 
@@ -50,6 +56,7 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
             String idAttributeKey = "sub";
 
             User existingUser = this.usersRepository.findByEmail(email).orElse(null);
+
             if (existingUser != null) {
                 DefaultOAuth2User oAuth2User = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(existingUser.getName())), attributes, idAttributeKey);
                 Authentication securityAuth = new OAuth2AuthenticationToken(oAuth2User, List.of(new SimpleGrantedAuthority(existingUser.getName())), oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
@@ -63,14 +70,20 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
                 newUser.setIsVerified(Boolean.valueOf(isVerified));
                 newUser.setRegistrationDate(LocalDateTime.now());
                 newUser.setRole(Role.USER);
+                newUser.setRegistrationMethod(RegistrationMethod.GOOGLE);
                 this.usersRepository.save(newUser);
+
+                try {
+                    this.mailService.userRegistrationEmail(newUser);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
 
                 DefaultOAuth2User oAuth2User = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(newUser.getName())), attributes, idAttributeKey);
                 Authentication securityAuth = new OAuth2AuthenticationToken(oAuth2User, List.of(new SimpleGrantedAuthority(newUser.getName())), oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                 SecurityContextHolder.getContext().setAuthentication(securityAuth);
             }
         }
-        this.setAlwaysUseDefaultTargetUrl(true);
 
         DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oauth2User.getAttributes();
@@ -81,6 +94,7 @@ public class Oauth2LoginHandler extends SavedRequestAwareAuthenticationSuccessHa
 
         String targetUrl = UriComponentsBuilder.fromUriString(frontEndUrl + "/").queryParam("token", token).build().toUriString();
 
+        this.setAlwaysUseDefaultTargetUrl(true);
         this.setDefaultTargetUrl(targetUrl);
         super.onAuthenticationSuccess(request, response, authentication);
 
