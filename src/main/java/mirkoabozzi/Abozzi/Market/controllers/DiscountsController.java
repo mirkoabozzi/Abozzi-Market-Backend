@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.DiscountsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Discount;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/discounts")
+@Tag(name = "Discounts")
 public class DiscountsController {
     @Autowired
     private DiscountsService discountsService;

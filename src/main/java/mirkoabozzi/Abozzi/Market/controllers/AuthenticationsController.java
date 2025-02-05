@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/authentication")
+@Tag(name = "Authorization")
 public class AuthenticationsController {
     @Autowired
     private AuthenticationService authenticationService;

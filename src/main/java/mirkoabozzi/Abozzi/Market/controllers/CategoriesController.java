@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.CategoriesDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categories")
+@Tag(name = "Categories")
 public class CategoriesController {
     @Autowired
     private CategoriesService categoriesService;

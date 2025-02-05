@@ -3,6 +3,7 @@ package mirkoabozzi.Abozzi.Market.controllers;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
 import mirkoabozzi.Abozzi.Market.dto.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.dto.PayPalExecuteDTO;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @NoArgsConstructor
 @RequestMapping("/pay")
+@Tag(name = "PayPal")
 public class PayPalController {
     @Autowired
     PayPalService payPalService;

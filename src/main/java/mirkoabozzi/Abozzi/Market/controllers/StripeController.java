@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import com.stripe.exception.StripeException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
 import mirkoabozzi.Abozzi.Market.entities.Stripe;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/stripe")
+@Tag(name = "Stripe")
 public class StripeController {
     @Autowired
     private StripeService stripeService;

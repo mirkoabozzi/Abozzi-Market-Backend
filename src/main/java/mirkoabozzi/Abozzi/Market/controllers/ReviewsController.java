@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.ReviewsDTO;
 import mirkoabozzi.Abozzi.Market.dto.ReviewsUpdateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Review;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reviews")
+@Tag(name = "Reviews")
 public class ReviewsController {
     @Autowired
     private ReviewsService reviewsService;

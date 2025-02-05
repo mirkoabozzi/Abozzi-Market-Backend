@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/orders")
+@Tag(name = "Orders")
 public class OrdersController {
     @Autowired
     private OrdersService ordersService;

@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import mirkoabozzi.Abozzi.Market.dto.MailDTO;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/mail")
+@Tag(name = "Mail")
 public class MailController {
     @Autowired
     private MailService mailService;

@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.ChangeUserPasswordDTO;
 import mirkoabozzi.Abozzi.Market.dto.ResetPasswordRespDTO;
 import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Users")
 public class UsersController {
     @Autowired
     private UsersService usersService;

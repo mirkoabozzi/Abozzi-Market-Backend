@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import mirkoabozzi.Abozzi.Market.dto.ProductDiscountDTO;
 import mirkoabozzi.Abozzi.Market.dto.ProductsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
+@Tag(name = "Products")
 public class ProductsController {
     @Autowired
     private ProductsService productsService;
