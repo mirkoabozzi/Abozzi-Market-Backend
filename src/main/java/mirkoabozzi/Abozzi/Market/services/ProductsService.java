@@ -82,7 +82,7 @@ public class ProductsService {
     //IMG UPLOAD
     public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
         Product productFound = this.findById(id);
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("secure_url");
         productFound.setImgUrl(url);
         this.productsRepository.save(productFound);
     }

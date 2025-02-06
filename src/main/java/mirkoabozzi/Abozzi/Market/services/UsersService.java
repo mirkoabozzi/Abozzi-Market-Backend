@@ -93,7 +93,7 @@ public class UsersService {
     //IMG UPLOAD
     public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
         User userFound = this.findById(id);
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("secure_url");
         userFound.setAvatar(url);
         this.usersRepository.save(userFound);
     }

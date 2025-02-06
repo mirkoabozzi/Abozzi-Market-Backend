@@ -58,7 +58,7 @@ public class CategoriesService {
     //IMG UPLOAD
     public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
         Category categoryFound = this.findById(id);
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("secure_url");
         categoryFound.setImage(url);
         this.categoriesRepository.save(categoryFound);
     }
