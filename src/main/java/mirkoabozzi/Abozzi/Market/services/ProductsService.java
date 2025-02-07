@@ -10,11 +10,13 @@ import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.ProductsRepository;
+import mirkoabozzi.Abozzi.Market.specification.ProductsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,7 +91,7 @@ public class ProductsService {
 
     //FIND BY PRODUCT CONTAINS NAME
     public Page<Product> findByProductsContainsName(int pages, int size, String sortBy, String name) {
-        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending().descending());
+        Pageable pageable = PageRequest.of(pages, size, Sort.by(sortBy).descending());
         return this.productsRepository.findByNameContainingIgnoreCase(pageable, name);
     }
 
@@ -136,5 +138,26 @@ public class ProductsService {
             throw new BadRequestException("This product don't have this discount!");
         }
         return this.productsRepository.save(productFound);
+    }
+
+    public Page<Product> filterProducts(int page, int size, String sortBy, String name, String categoryName, Double min, Double max, Boolean discountStatus) {
+        if (page > 100) page = 100;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Specification<Product> specification = Specification.where(null);
+
+        if (name != null)
+            specification = specification.and(ProductsSpecification.hasName(name));
+
+        if (categoryName != null)
+            specification = specification.and(ProductsSpecification.hasCategoryName(categoryName));
+
+        if (min != null && max != null)
+            specification = specification.and(ProductsSpecification.hasPriceRange(min, max));
+
+        if (discountStatus != null)
+            specification = specification.and(ProductsSpecification.hasDiscount(discountStatus));
+
+        return productsRepository.findAll(specification, pageable);
     }
 }

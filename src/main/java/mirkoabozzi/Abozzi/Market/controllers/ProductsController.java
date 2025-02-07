@@ -147,4 +147,17 @@ public class ProductsController {
             return this.productsService.removeDiscount(id, payload);
         }
     }
+
+    @GetMapping("/filter")
+    public Page<Product> filterProducts(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "24") int size,
+                                        @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                        @RequestParam(required = false) String name,
+                                        @RequestParam(required = false) String categoryName,
+                                        @RequestParam(required = false, defaultValue = "0.0") Double min,
+                                        @RequestParam(required = false) Double max,
+                                        @RequestParam(required = false) Boolean discountStatus
+    ) {
+        return this.productsService.filterProducts(page, size, sortBy, name, categoryName, min, max, discountStatus);
+    }
 }
