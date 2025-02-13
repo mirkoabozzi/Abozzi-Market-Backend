@@ -65,7 +65,7 @@ public class OrdersService {
             if (product.getQuantityAvailable() < detailDTO.quantity())
                 throw new BadRequestException("Not enough stock for product " + product.getId());
             product.setQuantityAvailable(product.getQuantityAvailable() - detailDTO.quantity());
-            return new OrderDetail(detailDTO.quantity(), newOrder, product);
+            return new OrderDetail(detailDTO.quantity(), newOrder, product, detailDTO.price());
         }).toList();
 
         Order savedOrder = this.ordersRepository.save(newOrder);

@@ -7,6 +7,8 @@ public record OrderDetailsDTO(
         @NotEmpty(message = "Product is required. ")
         String product,
         @NotNull(message = "Quantity is required. ")
-        int quantity
+        int quantity,
+        @NotNull(message = "Price is required. ")
+        double price
 ) {
 }
