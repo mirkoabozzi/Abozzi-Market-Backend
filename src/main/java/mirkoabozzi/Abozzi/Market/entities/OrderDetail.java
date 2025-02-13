@@ -30,9 +30,12 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public OrderDetail(int quantity, Order order, Product product) {
+    private double price;
+
+    public OrderDetail(int quantity, Order order, Product product, double price) {
         this.quantity = quantity;
         this.order = order;
         this.product = product;
+        this.price = price;
     }
 }
