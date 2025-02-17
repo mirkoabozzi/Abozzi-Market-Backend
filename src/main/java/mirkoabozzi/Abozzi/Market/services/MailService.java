@@ -78,6 +78,35 @@ public class MailService {
         this.javaMailSender.send(msg);
     }
 
+    public void confirmPasswordChanged(User user) throws MessagingException {
+        MimeMessage msg = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(user.getEmail());
+        helper.setSubject("Cambio password confermato");
+
+        String content =
+                "<!DOCTYPE html>" +
+                        "<html lang='it'>" +
+                        "<head>" +
+                        "<meta charset='UTF-8'>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "<title>Password cambiata con successo</title>" +
+                        "</head>" +
+                        "<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center;'>" +
+                        "<div style='background-color: white; padding: 40px; max-width: 500px; margin: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+                        "<h1 style='color: #1a51bf;'>Cambio Password</h1>" +
+                        "<p style='color: #333;'>La tua password è stata modificata con successo, da questo momento potrai utilizzare la tua nuova password per accedere.</p>" +
+                        "<a href='" + frontEndUrl + "' " +
+                        "style='background-color: #1a51bf; color: white; padding: 15px 25px; border: none; border-radius: 5px; font-size: 16px; text-decoration: none; display: inline-block; margin-top: 20px;'>Continua i tuoi acquisti</a>" +
+                        "<p style='color: #333;'>Abozzi Market SNC</p>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>";
+
+        helper.setText(content, true);
+        this.javaMailSender.send(msg);
+    }
+
     public void orderConfirmationEmail(User user, Order order, List<OrderDetail> orderDetails) throws MessagingException {
         MimeMessage msg = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
@@ -136,7 +165,7 @@ public class MailService {
             content += "<tr>" +
                     "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + product.getName() + "</td>" +
                     "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + detail.getQuantity() + "</td>" +
-                    "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + product.getPrice() + "</td>" +
+                    "<td style='border-bottom: 1px solid #ddd; padding: 8px;'>" + detail.getPrice() + "</td>" +
                     "</tr>";
         }
         content += "</tbody>" +
