@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
@@ -43,6 +44,7 @@ public class OrdersService {
     private MailService mailService;
 
     //POST SAVE ORDER
+    @Transactional
     public Order saveOrder(OrdersDTO payload) throws MessagingException {
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
         Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound);
@@ -74,7 +76,6 @@ public class OrdersService {
         this.mailService.orderConfirmationEmail(userFound, newOrder, orderDetails);
         return savedOrder;
     }
-
 
     //FIND BY ID
     public Order findById(UUID id) {

@@ -62,7 +62,7 @@ public class AuthenticationsController {
 
     //PUT RESET PASSWORD
     @PutMapping("/reset/{token}")
-    public ResetPasswordRespDTO resetPassword(@PathVariable String token, @RequestBody @Validated ResetUserPassword payload, BindingResult validation) {
+    public ResetPasswordRespDTO resetPassword(@PathVariable String token, @RequestBody @Validated ResetUserPassword payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
