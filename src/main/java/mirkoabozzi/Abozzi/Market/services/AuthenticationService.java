@@ -1,6 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
-import mirkoabozzi.Abozzi.Market.dto.UsersLoginDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.UsersLoginDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.seciurity.JWTTools;

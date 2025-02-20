@@ -1,11 +1,13 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import mirkoabozzi.Abozzi.Market.dto.ProductDiscountDTO;
-import mirkoabozzi.Abozzi.Market.dto.ProductsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ProductDiscountDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ProductsDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.ProductRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.ProductsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,45 +28,50 @@ import java.util.stream.Collectors;
 public class ProductsController {
     @Autowired
     private ProductsService productsService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //POST SAVE
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Product saveProduct(@RequestBody @Validated ProductsDTO payload, BindingResult validation) {
+    public ProductRespDTO saveProduct(@RequestBody @Validated ProductsDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.productsService.saveProduct(payload);
+            Product product = this.productsService.saveProduct(payload);
+            return this.modelMapper.map(product, ProductRespDTO.class);
         }
     }
 
     // GET ALL
     @GetMapping("/all")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Product> getAllProducts(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "24") int size,
-                                        @RequestParam(defaultValue = "lastUpdate") String sortBy) {
-        return this.productsService.getAllProducts(page, size, sortBy);
+    public Page<ProductRespDTO> getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "24") int size,
+                                               @RequestParam(defaultValue = "lastUpdate") String sortBy
+    ) {
+        Page<Product> productPage = this.productsService.getAllProducts(page, size, sortBy);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 
     //GET BY ID
     @GetMapping("/product/{id}")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Product getProductById(@PathVariable UUID id) {
-        return this.productsService.findById(id);
+    public ProductRespDTO getProductById(@PathVariable UUID id) {
+        Product product = this.productsService.findById(id);
+        return this.modelMapper.map(product, ProductRespDTO.class);
     }
 
     //UPDATE
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Product updateProduct(@PathVariable UUID id, @RequestBody @Validated ProductsDTO payload, BindingResult validation) {
+    public ProductRespDTO updateProduct(@PathVariable UUID id, @RequestBody @Validated ProductsDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.productsService.updateProduct(id, payload);
+            Product product = this.productsService.updateProduct(id, payload);
+            return this.modelMapper.map(product, ProductRespDTO.class);
         }
     }
 
@@ -85,79 +92,85 @@ public class ProductsController {
 
     //GET FIND BY PRODUCTS NAME
     @GetMapping("/name")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Product> findByProductsContainsName(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "24") int size,
-                                                    @RequestParam(defaultValue = "lastUpdate") String sortBy,
-                                                    @RequestParam String name) {
-        return this.productsService.findByProductsContainsName(page, size, sortBy, name);
+    public Page<ProductRespDTO> findByProductsContainsName(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "24") int size,
+                                                           @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                                           @RequestParam String name
+    ) {
+        Page<Product> productPage = this.productsService.findByProductsContainsName(page, size, sortBy, name);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 
     //GET PRODUCTS BY CATEGORY NAME
     @GetMapping("/category")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Product> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "24") int size,
-                                                    @RequestParam(defaultValue = "lastUpdate") String sortBy,
-                                                    @RequestParam String name) {
-        return this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
+    public Page<ProductRespDTO> findProductsByCategoryName(@RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "24") int size,
+                                                           @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                                           @RequestParam String name
+    ) {
+        Page<Product> productPage = this.productsService.findProductsByCategoryContainingName(page, size, sortBy, name);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 
     //GET FIND BY PRICE RANGE
     @GetMapping("/price")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Product> findByPriceRange(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "24") int size,
-                                          @RequestParam(defaultValue = "lastUpdate") String sortBy,
-                                          @RequestParam int min,
-                                          @RequestParam int max) {
-        return this.productsService.findByPriceRange(page, size, sortBy, min, max);
+    public Page<ProductRespDTO> findByPriceRange(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "24") int size,
+                                                 @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                                 @RequestParam int min,
+                                                 @RequestParam int max
+    ) {
+        Page<Product> productPage = this.productsService.findByPriceRange(page, size, sortBy, min, max);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 
     //GET FIND BY DISCOUNT STATUS
     @GetMapping("/discount")
-//    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Page<Product> findByDiscountStatus(@RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "24") int size,
-                                              @RequestParam(defaultValue = "lastUpdate") String sortBy
+    public Page<ProductRespDTO> findByDiscountStatus(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "24") int size,
+                                                     @RequestParam(defaultValue = "lastUpdate") String sortBy
     ) {
-        return this.productsService.findByDiscountStatus(page, size, sortBy);
+        Page<Product> productPage = this.productsService.findByDiscountStatus(page, size, sortBy);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 
     //UPDATE ADD DISCOUNT
     @PutMapping("/add/discount/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Product addDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
+    public ProductRespDTO addDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.productsService.addDiscount(id, payload);
+            Product product = this.productsService.addDiscount(id, payload);
+            return this.modelMapper.map(product, ProductRespDTO.class);
         }
     }
 
     //REMOVE DISCOUNT
     @DeleteMapping("/remove/discount/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Product removeDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
+    public ProductRespDTO removeDiscount(@PathVariable UUID id, @RequestBody @Validated ProductDiscountDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.productsService.removeDiscount(id, payload);
+            Product product = this.productsService.removeDiscount(id, payload);
+            return this.modelMapper.map(product, ProductRespDTO.class);
         }
     }
 
     @GetMapping("/filter")
-    public Page<Product> filterProducts(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "24") int size,
-                                        @RequestParam(defaultValue = "lastUpdate") String sortBy,
-                                        @RequestParam(required = false) String name,
-                                        @RequestParam(required = false) String categoryName,
-                                        @RequestParam(required = false, defaultValue = "0.0") Double min,
-                                        @RequestParam(required = false) Double max,
-                                        @RequestParam(required = false) Boolean discountStatus
+    public Page<ProductRespDTO> filterProducts(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "24") int size,
+                                               @RequestParam(defaultValue = "lastUpdate") String sortBy,
+                                               @RequestParam(required = false) String name,
+                                               @RequestParam(required = false) String categoryName,
+                                               @RequestParam(required = false, defaultValue = "0.0") Double min,
+                                               @RequestParam(required = false) Double max,
+                                               @RequestParam(required = false) Boolean discountStatus
     ) {
-        return this.productsService.filterProducts(page, size, sortBy, name, categoryName, min, max, discountStatus);
+        Page<Product> productPage = this.productsService.filterProducts(page, size, sortBy, name, categoryName, min, max, discountStatus);
+        return productPage.map(product -> this.modelMapper.map(product, ProductRespDTO.class));
     }
 }

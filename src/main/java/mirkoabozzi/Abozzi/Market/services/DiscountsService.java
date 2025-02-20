@@ -1,7 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.transaction.Transactional;
-import mirkoabozzi.Abozzi.Market.dto.DiscountsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.DiscountsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Discount;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;

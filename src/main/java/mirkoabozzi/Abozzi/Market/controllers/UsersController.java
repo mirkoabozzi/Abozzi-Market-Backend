@@ -1,12 +1,14 @@
 package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import mirkoabozzi.Abozzi.Market.dto.ChangeUserPasswordDTO;
-import mirkoabozzi.Abozzi.Market.dto.ResetPasswordRespDTO;
-import mirkoabozzi.Abozzi.Market.dto.UsersDTO;
-import mirkoabozzi.Abozzi.Market.dto.UsersRoleDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ChangeUserPasswordDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.UsersDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.UsersRoleDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.ResetPasswordRespDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.UserRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,26 +27,31 @@ import java.util.UUID;
 public class UsersController {
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //GET ALL
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "20") int size,
-                                  @RequestParam(defaultValue = "surname") String sortBy) {
-        return this.usersService.findAll(page, size, sortBy);
+    public Page<UserRespDTO> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "20") int size,
+                                         @RequestParam(defaultValue = "surname") String sortBy
+    ) {
+        Page<User> userPage = this.usersService.findAll(page, size, sortBy);
+        return userPage.map(user -> this.modelMapper.map(user, UserRespDTO.class));
     }
 
     //GET ME
     @GetMapping("/me")
-    public User getMyProfile(@AuthenticationPrincipal User userAuthenticated) {
-        return userAuthenticated;
+    public UserRespDTO getMyProfile(@AuthenticationPrincipal User userAuthenticated) {
+        return this.modelMapper.map(userAuthenticated, UserRespDTO.class);
     }
 
     //PUT ME
     @PutMapping("/me")
-    public User updateMyProfile(@AuthenticationPrincipal User userAuthenticated, @RequestBody UsersDTO payload) {
-        return this.usersService.updateUser(userAuthenticated.getId(), payload);
+    public UserRespDTO updateMyProfile(@AuthenticationPrincipal User userAuthenticated, @RequestBody UsersDTO payload) {
+        User user = this.usersService.updateUser(userAuthenticated.getId(), payload);
+        return this.modelMapper.map(user, UserRespDTO.class);
     }
 
     //POST ME IMG
@@ -56,8 +63,9 @@ public class UsersController {
     //PUT CHANGE USER ROLE
     @PutMapping("/role")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User updateUserRole(@RequestBody UsersRoleDTO payload) {
-        return this.usersService.updateUserRole(payload);
+    public UserRespDTO updateUserRole(@RequestBody UsersRoleDTO payload) {
+        User user = this.usersService.updateUserRole(payload);
+        return this.modelMapper.map(user, UserRespDTO.class);
     }
 
     //DELET USER
@@ -72,11 +80,13 @@ public class UsersController {
     //GET BY NAME
     @GetMapping("/name")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<User> findByName(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "20") int size,
-                                 @RequestParam(defaultValue = "surname") String sortBy,
-                                 @RequestParam String user) {
-        return this.usersService.findByName(page, size, sortBy, user);
+    public Page<UserRespDTO> findByName(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size,
+                                        @RequestParam(defaultValue = "surname") String sortBy,
+                                        @RequestParam String user
+    ) {
+        Page<User> userPage = this.usersService.findByName(page, size, sortBy, user);
+        return userPage.map(userEntity -> modelMapper.map(userEntity, UserRespDTO.class));
     }
 
     //PUT ME PASSWORD

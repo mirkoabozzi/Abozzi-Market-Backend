@@ -2,7 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import mirkoabozzi.Abozzi.Market.dto.MailDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.MailDTO;
 import mirkoabozzi.Abozzi.Market.entities.Order;
 import mirkoabozzi.Abozzi.Market.entities.OrderDetail;
 import mirkoabozzi.Abozzi.Market.entities.Product;

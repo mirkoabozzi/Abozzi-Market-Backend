@@ -5,11 +5,13 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NoArgsConstructor;
-import mirkoabozzi.Abozzi.Market.dto.PayPalDTO;
-import mirkoabozzi.Abozzi.Market.dto.PayPalExecuteDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.PayPalDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.PayPalExecuteDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.PayPalRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.PayPal;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.PayPalService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -26,7 +28,9 @@ import java.util.stream.Collectors;
 @Tag(name = "PayPal")
 public class PayPalController {
     @Autowired
-    PayPalService payPalService;
+    private PayPalService payPalService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //CREATE PAYMENT POST
     @PostMapping
@@ -65,8 +69,10 @@ public class PayPalController {
     //REPORT BY DATE
     @GetMapping("/report")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<PayPal> findByDate(@RequestParam LocalDateTime startDate,
-                                   @RequestParam LocalDateTime endDate) {
-        return this.payPalService.findByPaymentDate(startDate, endDate);
+    public List<PayPalRespDTO> findByDate(@RequestParam LocalDateTime startDate,
+                                          @RequestParam LocalDateTime endDate
+    ) {
+        List<PayPal> payPalList = this.payPalService.findByPaymentDate(startDate, endDate);
+        return payPalList.stream().map(payPal -> modelMapper.map(payPal, PayPalRespDTO.class)).toList();
     }
 }

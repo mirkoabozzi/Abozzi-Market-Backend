@@ -2,8 +2,8 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import mirkoabozzi.Abozzi.Market.dto.ProductDiscountDTO;
-import mirkoabozzi.Abozzi.Market.dto.ProductsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ProductDiscountDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ProductsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
 import mirkoabozzi.Abozzi.Market.entities.Discount;
 import mirkoabozzi.Abozzi.Market.entities.Product;

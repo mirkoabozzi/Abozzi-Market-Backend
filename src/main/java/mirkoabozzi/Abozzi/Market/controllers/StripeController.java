@@ -2,11 +2,13 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import com.stripe.exception.StripeException;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.StripeDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.StripeRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.Stripe;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.repositories.StripeRepository;
 import mirkoabozzi.Abozzi.Market.services.StripeService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,8 @@ public class StripeController {
     private StripeService stripeService;
     @Autowired
     private StripeRepository stripeRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //POST CREATE STRIPE SESSION
     @PostMapping
@@ -48,8 +52,10 @@ public class StripeController {
     //REPORT BY DATE
     @GetMapping("/report")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<Stripe> findByDate(@RequestParam LocalDateTime startDate,
-                                   @RequestParam LocalDateTime endDate) {
-        return this.stripeService.findByPaymentDate(startDate, endDate);
+    public List<StripeRespDTO> findByDate(@RequestParam LocalDateTime startDate,
+                                          @RequestParam LocalDateTime endDate
+    ) {
+        List<Stripe> stripeList = this.stripeService.findByPaymentDate(startDate, endDate);
+        return stripeList.stream().map(stripe -> this.modelMapper.map(stripe, StripeRespDTO.class)).toList();
     }
 }

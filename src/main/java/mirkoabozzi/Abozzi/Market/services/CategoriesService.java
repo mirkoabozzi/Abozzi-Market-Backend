@@ -2,7 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import mirkoabozzi.Abozzi.Market.dto.CategoriesDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.CategoriesDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;

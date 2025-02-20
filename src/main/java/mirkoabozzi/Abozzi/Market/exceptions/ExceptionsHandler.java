@@ -3,7 +3,7 @@ package mirkoabozzi.Abozzi.Market.exceptions;
 import com.paypal.base.rest.PayPalRESTException;
 import com.stripe.exception.StripeException;
 import jakarta.mail.MessagingException;
-import mirkoabozzi.Abozzi.Market.dto.ErrorsDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.ErrorsDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;

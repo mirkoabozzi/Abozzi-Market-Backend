@@ -2,12 +2,14 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
-import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
-import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.OrdersDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.OrdersStateDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.OrderRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.Order;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.OrdersService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,27 +28,32 @@ import java.util.stream.Collectors;
 public class OrdersController {
     @Autowired
     private OrdersService ordersService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //POST
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Order saveOrder(@RequestBody @Validated OrdersDTO payload, BindingResult validation) throws MessagingException {
+    public OrderRespDTO saveOrder(@RequestBody @Validated OrdersDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.ordersService.saveOrder(payload);
+            Order order = this.ordersService.saveOrder(payload);
+            return this.modelMapper.map(order, OrderRespDTO.class);
         }
     }
 
     //GET ALL
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Order> getAllOrders(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size,
-                                    @RequestParam(defaultValue = "orderDate") String sortBy) {
-        return this.ordersService.getAllOrders(page, size, sortBy);
+    public Page<OrderRespDTO> getAllOrders(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size,
+                                           @RequestParam(defaultValue = "orderDate") String sortBy
+    ) {
+        Page<Order> orderPage = this.ordersService.getAllOrders(page, size, sortBy);
+        return orderPage.map(order -> modelMapper.map(order, OrderRespDTO.class));
     }
 
     //DELETE
@@ -59,12 +66,13 @@ public class OrdersController {
 
     //GET MY ORDER
     @GetMapping("/me")
-    public Page<Order> getMyOrders(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "10") int size,
-                                   @RequestParam(defaultValue = "orderDate") String sortBy,
-                                   @AuthenticationPrincipal User userAuthenticated
+    public Page<OrderRespDTO> getMyOrders(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "orderDate") String sortBy,
+                                          @AuthenticationPrincipal User userAuthenticated
     ) {
-        return this.ordersService.getMyOrders(page, size, sortBy, userAuthenticated.getId());
+        Page<Order> orderPage = this.ordersService.getMyOrders(page, size, sortBy, userAuthenticated.getId());
+        return orderPage.map(order -> modelMapper.map(order, OrderRespDTO.class));
     }
 
     //DELETE
@@ -77,36 +85,41 @@ public class OrdersController {
     //GET MY ORDER BY ID
     @GetMapping("/me/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public Order getMyOrderById(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
-        return this.ordersService.findMyOrderById(id, userAuthenticated.getId());
+    public OrderRespDTO getMyOrderById(@PathVariable UUID id, @AuthenticationPrincipal User userAuthenticated) {
+        Order order = this.ordersService.findMyOrderById(id, userAuthenticated.getId());
+        return this.modelMapper.map(order, OrderRespDTO.class);
     }
 
     //UPDATE ORDER STATE
     @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Order updateOrder(@RequestBody @Validated OrdersStateDTO payload, BindingResult validation) throws MessagingException {
+    public OrderRespDTO updateOrder(@RequestBody @Validated OrdersStateDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.ordersService.updateOrderState(payload);
+            Order order = this.ordersService.updateOrderState(payload);
+            return this.modelMapper.map(order, OrderRespDTO.class);
         }
     }
 
     // GET BY USER EMAIL
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Order> getOrderByUserEmail(@RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "10") int size,
-                                           @RequestParam(defaultValue = "orderDate") String sortBy,
-                                           @RequestParam String email) {
-        return this.ordersService.findByUserEmail(page, size, sortBy, email);
+    public Page<OrderRespDTO> getOrderByUserEmail(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size,
+                                                  @RequestParam(defaultValue = "orderDate") String sortBy,
+                                                  @RequestParam String email
+    ) {
+        Page<Order> orderPage = this.ordersService.findByUserEmail(page, size, sortBy, email);
+        return orderPage.map(order -> modelMapper.map(order, OrderRespDTO.class));
     }
 
     //GET ORDER BY ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Order getOrderById(@PathVariable UUID id) {
-        return this.ordersService.findById(id);
+    public OrderRespDTO getOrderById(@PathVariable UUID id) {
+        Order order = this.ordersService.findById(id);
+        return this.modelMapper.map(order, OrderRespDTO.class);
     }
 }

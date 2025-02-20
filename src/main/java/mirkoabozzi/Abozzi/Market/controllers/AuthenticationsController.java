@@ -2,11 +2,18 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
-import mirkoabozzi.Abozzi.Market.dto.*;
+import mirkoabozzi.Abozzi.Market.dto.request.ResetUserPassword;
+import mirkoabozzi.Abozzi.Market.dto.request.ResetUserPasswordRequest;
+import mirkoabozzi.Abozzi.Market.dto.request.UsersDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.UsersLoginDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.ResetPasswordRespDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.UserRegistrationRespDTO;
+import mirkoabozzi.Abozzi.Market.dto.response.UsersLoginRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.AuthenticationService;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -23,16 +30,19 @@ public class AuthenticationsController {
     private AuthenticationService authenticationService;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     //POST REGISTRATION
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public User saveUser(@RequestBody @Validated UsersDTO payload, BindingResult validation) throws MessagingException {
+    public UserRegistrationRespDTO saveUser(@RequestBody @Validated UsersDTO payload, BindingResult validation) throws MessagingException {
         if (validation.hasErrors()) {
             String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
             throw new BadRequestException("Payload error: " + msg);
         } else {
-            return this.usersService.saveUser(payload);
+            User user = this.usersService.saveUser(payload);
+            return modelMapper.map(user, UserRegistrationRespDTO.class);
         }
     }
 

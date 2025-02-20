@@ -2,8 +2,8 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
-import mirkoabozzi.Abozzi.Market.dto.OrdersDTO;
-import mirkoabozzi.Abozzi.Market.dto.OrdersStateDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.OrdersDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
 import mirkoabozzi.Abozzi.Market.enums.OrdersState;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;

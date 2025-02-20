@@ -2,7 +2,7 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
-import mirkoabozzi.Abozzi.Market.dto.MailDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.MailDTO;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;

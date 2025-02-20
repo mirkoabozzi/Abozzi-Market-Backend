@@ -1,6 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
-import mirkoabozzi.Abozzi.Market.dto.WishlistsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.WishlistsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.entities.Wishlist;

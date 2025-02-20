@@ -1,7 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
-import mirkoabozzi.Abozzi.Market.dto.ReviewsDTO;
-import mirkoabozzi.Abozzi.Market.dto.ReviewsUpdateDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ReviewsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ReviewsUpdateDTO;
 import mirkoabozzi.Abozzi.Market.entities.Product;
 import mirkoabozzi.Abozzi.Market.entities.Review;
 import mirkoabozzi.Abozzi.Market.entities.User;

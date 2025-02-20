@@ -3,7 +3,7 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
-import mirkoabozzi.Abozzi.Market.dto.StripeDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.StripeDTO;
 import mirkoabozzi.Abozzi.Market.entities.Stripe;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;

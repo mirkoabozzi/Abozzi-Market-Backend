@@ -1,6 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
-import mirkoabozzi.Abozzi.Market.dto.ShipmentsDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.ShipmentsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Shipment;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;

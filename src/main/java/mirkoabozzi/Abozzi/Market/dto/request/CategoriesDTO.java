@@ -1,4 +1,4 @@
-package mirkoabozzi.Abozzi.Market.dto;
+package mirkoabozzi.Abozzi.Market.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 

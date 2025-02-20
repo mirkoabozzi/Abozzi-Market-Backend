@@ -3,7 +3,7 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
-import mirkoabozzi.Abozzi.Market.dto.*;
+import mirkoabozzi.Abozzi.Market.dto.request.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
 import mirkoabozzi.Abozzi.Market.enums.Role;

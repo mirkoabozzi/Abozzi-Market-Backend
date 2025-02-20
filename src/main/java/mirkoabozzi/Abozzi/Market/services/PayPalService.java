@@ -4,7 +4,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
-import mirkoabozzi.Abozzi.Market.dto.PayPalDTO;
+import mirkoabozzi.Abozzi.Market.dto.request.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.entities.PayPal;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
 import mirkoabozzi.Abozzi.Market.repositories.PayPalRepository;
