@@ -25,7 +25,7 @@ import java.util.UUID;
 @Service
 public class OrdersService {
     @Autowired
-    ProductsService productsService;
+    private ProductsService productsService;
     @Autowired
     private OrdersRepository ordersRepository;
     @Autowired

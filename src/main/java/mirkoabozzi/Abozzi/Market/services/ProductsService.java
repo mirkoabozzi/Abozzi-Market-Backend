@@ -38,8 +38,6 @@ public class ProductsService {
 
     //POST SAVE
     public Product saveProduct(ProductsDTO payload) {
-//        if (this.productsRepository.existsByName(payload.name()))
-//            throw new BadRequestException("Product " + payload.name() + " already on DB");
         Category categoryFound = this.categoriesService.findById(UUID.fromString(payload.category()));
         Product newProduct = new Product(
                 payload.name(),

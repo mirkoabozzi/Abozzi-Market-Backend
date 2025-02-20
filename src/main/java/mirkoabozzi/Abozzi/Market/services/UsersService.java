@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -36,8 +35,6 @@ public class UsersService {
     private Cloudinary cloudinary;
     @Autowired
     private MailgunSender mailgunSender;
-    @Autowired
-    private JavaMailSender javaMailSender;
     @Autowired
     private MailService mailService;
 

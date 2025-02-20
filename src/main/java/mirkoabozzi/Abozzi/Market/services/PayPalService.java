@@ -3,7 +3,6 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import lombok.RequiredArgsConstructor;
 import mirkoabozzi.Abozzi.Market.dto.request.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.entities.PayPal;
 import mirkoabozzi.Abozzi.Market.exceptions.NotFoundException;
@@ -17,9 +16,9 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-@RequiredArgsConstructor
 public class PayPalService {
-    private final APIContext apiContext;
+    @Autowired
+    private APIContext apiContext;
     @Autowired
     private PayPalRepository payPalRepository;
 

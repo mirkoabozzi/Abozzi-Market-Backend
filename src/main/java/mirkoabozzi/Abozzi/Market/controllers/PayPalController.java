@@ -4,7 +4,6 @@ import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.NoArgsConstructor;
 import mirkoabozzi.Abozzi.Market.dto.request.PayPalDTO;
 import mirkoabozzi.Abozzi.Market.dto.request.PayPalExecuteDTO;
 import mirkoabozzi.Abozzi.Market.dto.response.PayPalRespDTO;
@@ -23,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@NoArgsConstructor
 @RequestMapping("/pay")
 @Tag(name = "PayPal")
 public class PayPalController {
