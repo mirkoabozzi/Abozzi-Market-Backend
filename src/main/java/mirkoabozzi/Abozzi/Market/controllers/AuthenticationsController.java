@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import mirkoabozzi.Abozzi.Market.dto.request.ResetUserPassword;
 import mirkoabozzi.Abozzi.Market.dto.request.ResetUserPasswordRequest;
 import mirkoabozzi.Abozzi.Market.dto.request.UsersDTO;
@@ -11,7 +12,9 @@ import mirkoabozzi.Abozzi.Market.dto.response.UserRegistrationRespDTO;
 import mirkoabozzi.Abozzi.Market.dto.response.UsersLoginRespDTO;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
+import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import mirkoabozzi.Abozzi.Market.services.AuthenticationService;
+import mirkoabozzi.Abozzi.Market.services.BlackListTokenService;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,8 @@ public class AuthenticationsController {
     private UsersService usersService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private BlackListTokenService blackListTokenService;
 
     //POST REGISTRATION
     @PostMapping("/registration")
@@ -87,5 +92,17 @@ public class AuthenticationsController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void verifyUserEmail(@PathVariable String token) {
         this.usersService.verifyUserEmail(token);
+    }
+
+    //POST LOGOUT
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String logout(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header == null || !header.startsWith("Bearer "))
+            throw new UnauthorizedException("Token required");
+        String token = header.substring(7);
+        this.blackListTokenService.logout(token);
+        return "Logout accepted.";
     }
 }

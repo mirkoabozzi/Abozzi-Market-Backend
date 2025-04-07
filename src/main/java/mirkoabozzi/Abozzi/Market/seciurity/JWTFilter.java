@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
+import mirkoabozzi.Abozzi.Market.services.BlackListTokenService;
 import mirkoabozzi.Abozzi.Market.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,8 @@ public class JWTFilter extends OncePerRequestFilter {
     private JWTTools jwtTools;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private BlackListTokenService blackListTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -33,6 +36,8 @@ public class JWTFilter extends OncePerRequestFilter {
         if (header == null || !header.startsWith("Bearer "))
             throw new UnauthorizedException("Token required");
         String token = header.substring(7);
+        if (this.blackListTokenService.isPresent(token))
+            throw new UnauthorizedException("Token expired");
         this.jwtTools.verifyToken(token);
         String id = jwtTools.extractIdFromToken(token);
         User userFound = this.usersService.findById(UUID.fromString(id));
