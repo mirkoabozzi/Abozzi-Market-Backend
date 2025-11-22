@@ -1,6 +1,7 @@
 package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.dto.request.DiscountsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Discount;
 import mirkoabozzi.Abozzi.Market.entities.Product;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class DiscountsService {
     @Autowired
@@ -30,6 +32,7 @@ public class DiscountsService {
         if (this.discountsRepository.existsByDescription(payload.description()))
             throw new BadRequestException("Discount " + payload.description() + " already on DB");
         Discount newDiscount = new Discount(payload.description(), payload.percentage(), payload.startDate(), payload.endDate());
+        log.info("[DiscountsService] New discount created: {}", newDiscount.getDescription());
         return this.discountsRepository.save(newDiscount);
     }
 

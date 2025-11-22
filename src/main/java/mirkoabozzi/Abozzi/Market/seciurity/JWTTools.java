@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.seciurity;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JWTTools {
     @Value("${jwt.secret}")
@@ -17,6 +19,7 @@ public class JWTTools {
     private Long expiration;
 
     public String generateToken(User user) {
+        log.info("[JWTTools] Generating token for user: {}", user.getEmail());
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))

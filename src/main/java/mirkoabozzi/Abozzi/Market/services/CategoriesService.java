@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.dto.request.CategoriesDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class CategoriesService {
     @Autowired
@@ -36,6 +38,7 @@ public class CategoriesService {
         if (categoriesRepository.existsByNameIgnoreCase(payload.name()))
             throw new BadRequestException("Category " + payload.name() + " already on DB");
         Category newCategory = new Category(payload.name(), "https://ui-avatars.com/api/?name=" + payload.name());
+        log.info("[CategoriesService] New category created: {}", newCategory.getName());
         return this.categoriesRepository.save(newCategory);
     }
 

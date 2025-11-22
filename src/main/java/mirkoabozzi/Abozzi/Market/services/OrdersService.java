@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.dto.request.OrdersDTO;
 import mirkoabozzi.Abozzi.Market.dto.request.OrdersStateDTO;
 import mirkoabozzi.Abozzi.Market.entities.*;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class OrdersService {
     @Autowired
@@ -47,6 +49,8 @@ public class OrdersService {
     @Transactional
     public Order saveOrder(OrdersDTO payload) throws MessagingException {
         User userFound = this.usersService.findById(UUID.fromString(payload.user()));
+        log.info("[OrderService] Saving order for user: {}", userFound.getEmail());
+
         Order newOrder = new Order(LocalDateTime.now(), OrdersState.PROCESSING, userFound);
 
         if (payload.payment().startsWith("PAYID-")) {
@@ -74,6 +78,7 @@ public class OrdersService {
         this.orderDetailsService.saveAllOrderDetails(orderDetails);
 //        this.mailgunSender.sendOrderCreatedEmail(userFound);
         this.mailService.orderConfirmationEmail(userFound, newOrder, orderDetails);
+        log.info("[OrderService] Order saved for user: {}", userFound.getEmail());
         return savedOrder;
     }
 

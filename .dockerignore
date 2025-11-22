@@ -16,3 +16,5 @@ Thumbs.db
 ### Dependencies ###
 .mvn/
 .gradle/
+
+/logs/

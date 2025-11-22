@@ -3,6 +3,7 @@ package mirkoabozzi.Abozzi.Market.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.dto.request.*;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.enums.RegistrationMethod;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class UsersService {
     @Autowired
@@ -65,6 +67,7 @@ public class UsersService {
         User userSaved = this.usersRepository.save(newUser);
 //        this.mailgunSender.sendRegistrationEmail(newUser);
         this.mailService.userRegistrationEmail(userSaved);
+        log.info("[UserService] New user registered: {}", newUser.getEmail());
         return userSaved;
     }
 

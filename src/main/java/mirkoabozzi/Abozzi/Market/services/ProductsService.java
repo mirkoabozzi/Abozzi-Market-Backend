@@ -2,6 +2,7 @@ package mirkoabozzi.Abozzi.Market.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.dto.request.ProductDiscountDTO;
 import mirkoabozzi.Abozzi.Market.dto.request.ProductsDTO;
 import mirkoabozzi.Abozzi.Market.entities.Category;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ProductsService {
     @Autowired
@@ -48,6 +50,7 @@ public class ProductsService {
                 "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.description(),
                 false,
                 categoryFound);
+        log.info("[ProductsService] New product created: {}", newProduct.getName());
         return this.productsRepository.save(newProduct);
     }
 

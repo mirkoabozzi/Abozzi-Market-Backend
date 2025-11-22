@@ -1,5 +1,6 @@
 package mirkoabozzi.Abozzi.Market.services;
 
+import lombok.extern.slf4j.Slf4j;
 import mirkoabozzi.Abozzi.Market.entities.BlackListToken;
 import mirkoabozzi.Abozzi.Market.entities.User;
 import mirkoabozzi.Abozzi.Market.exceptions.BadRequestException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class BlackListTokenService {
     @Autowired
@@ -35,5 +37,6 @@ public class BlackListTokenService {
                 userFound
         );
         this.blackListTokenRepository.save(blackListToken);
+        log.info("[BlackListTokenService] Logout accepted for user: {} ", userFound.getEmail());
     }
 }
