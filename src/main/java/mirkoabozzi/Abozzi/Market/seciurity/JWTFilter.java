@@ -62,7 +62,8 @@ public class JWTFilter extends OncePerRequestFilter {
                 "/reviews/product/**",
                 "/mail/**",
                 "/swagger-ui/**",
-                "/v3/api-docs/**"
+                "/v3/api-docs/**",
+                "/health"
         );
         AntPathMatcher newAntPath = new AntPathMatcher();
         return patternList.stream().anyMatch(pattern -> newAntPath.match(pattern, path));
