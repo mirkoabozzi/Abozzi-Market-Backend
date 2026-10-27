@@ -145,7 +145,7 @@ public class ProductsService {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 
-        Specification<Product> specification = Specification.where(null);
+        Specification<Product> specification = Specification.where(Specification.allOf());
 
         if (name != null)
             specification = specification.and(ProductsSpecification.hasName(name));
